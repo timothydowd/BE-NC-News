@@ -4,10 +4,15 @@
   "description": "## Northcoders News API",
   "main": "index.js",
   "scripts": {
+    "seed": "knex seed:run",
+    "migrate:make": "knex migrate:make",
+    "migrate:latest": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./ --fix",
     "pre-commit": "npm t",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "setup:dbs": "psql -f db/setup.sql"
   },
   "repository": {
     "type": "git",
