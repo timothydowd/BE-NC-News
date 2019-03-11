@@ -1,4 +1,5 @@
 const { userData, topicData, articleData } = require('../data/test-data/index');
+const timeConverterForArray = require('../../utils/timeConverter')
 
 exports.seed = function(knex, Promise) {
   return knex.migrate
@@ -10,13 +11,17 @@ exports.seed = function(knex, Promise) {
         .returning('*'),
     )
     .then(() => {
-      knex('topics')
+      return knex('topics')
         .insert(topicData)
         .returning('*')
     })
     .then((topics) => {
+      // knex.select().from('topics').then(consol.log)
+      //console.log(topics)
+        const timeFormatArticleData = timeConverterForArray(articleData)
+        console.log(timeFormatArticleData)
         const articles = knex('articles')
-          .insert(articleData)
+          .insert(timeFormatArticleData)
           .returning('*')
           return Promise.all([topics, articles])
       }); 
