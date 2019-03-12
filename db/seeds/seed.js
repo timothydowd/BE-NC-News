@@ -1,7 +1,7 @@
 const {
   userData, topicData, articleData, commentData,
 } = require('../data/test-data/index');
-const { timeConverterForArticles, timeConverterForComments, timeConverter } = require('../../utils/timeConverter');
+const { timeConverter } = require('../../utils/timeConverter');
 
 const { commentsFormatter } = require('../../utils/dataFormatters');
 
@@ -40,6 +40,7 @@ exports.seed = function (knex, Promise) {
           return newCommentRecord
         })
         */
+
       const commentDataWithArticleId = commentsFormatter(articles, commentData);
 
       return knex('comments')
