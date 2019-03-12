@@ -4,11 +4,11 @@
   "description": "## Northcoders News API",
   "main": "index.js",
   "scripts": {
+    "test": "npm run setup:dbs && mocha ./spec/*.spec.js",
     "seed": "knex seed:run",
     "migrate:make": "knex migrate:make",
     "migrate:latest": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./ --fix",
     "pre-commit": "npm t",
     "posttest": "npm run lint",
@@ -30,9 +30,11 @@
     "pg": "^7.6.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "husky": "^1.1.4"
+    "husky": "^1.1.4",
+    "mocha": "^6.0.2"
   }
 }
