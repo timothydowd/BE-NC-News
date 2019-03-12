@@ -82,7 +82,7 @@ describe.only('/api', () => {
       }));
     it('GET articles - content object must contain correct number of comments in comment_count', () => request.get('/api/articles/')
       .then((res) => {
-        expect(res.body.articles[0].comment_count).to.equal('13');
+        expect(res.body.articles[3].comment_count).to.equal('2');
       }));
     it('GET articles - filters the articles by the username value specified in the query', () => request.get('/api/articles/?author=rogersop')
       .then((res) => {
@@ -91,12 +91,22 @@ describe.only('/api', () => {
         expect(res.body.articles[1].author).to.equal('rogersop');
         expect(res.body.articles[2].author).to.equal('rogersop');
       }));
-    it.only('GET articles - filters the articles by the topic value specified in the query', () => request.get('/api/articles/?topic=mitch')
+    it('GET articles - filters the articles by the topic value specified in the query', () => request.get('/api/articles/?topic=mitch')
       .then((res) => {
         expect(res.body.articles.length).to.eql(11);
         expect(res.body.articles[0].topic).to.equal('mitch');
         expect(res.body.articles[1].topic).to.equal('mitch');
         expect(res.body.articles[2].topic).to.equal('mitch');
+      }));
+    it('GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=author')
+      .then((res) => {
+        expect(res.body.articles[0].author).to.equal('butter_bridge');
+        expect(res.body.articles[res.body.articles.length - 1].author).to.equal('rogersop');
+      }));
+    it('GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=article_id')
+      .then((res) => {
+        expect(res.body.articles[0].article_id).to.equal(1);
+        expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(12);
       }));
   });
 });
