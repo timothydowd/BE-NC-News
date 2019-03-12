@@ -1,6 +1,6 @@
 const { getArticles, getArticlesByQuery } = require('../models/articlesModel');
 
-exports.sendArticles = (req, res, next) => {
+exports.sendArticles = (req, res, next) => { // if a query but not a sort query
   if (Object.keys(req.query).length !== 0 && Object.keys(req.query)[0] !== 'sort_by') {
     const key = `articles.${Object.keys(req.query)[0]}`;
     const val = Object.values(req.query)[0];
@@ -12,8 +12,9 @@ exports.sendArticles = (req, res, next) => {
       });
   } else {
     console.log(req.query);
-    const val = Object.values(req.query)[0];
-    getArticles(val)
+    const val = Object.values(req.query)[0]; // adds either sort query or empty val to val
+    const order = Object.values(req.query)[1];
+    getArticles(val, order)
 
       .then((articles) => {
         res.status(200).send({ articles });

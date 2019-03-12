@@ -82,7 +82,7 @@ describe.only('/api', () => {
       }));
     it('GET articles - content object must contain correct number of comments in comment_count', () => request.get('/api/articles/')
       .then((res) => {
-        expect(res.body.articles[3].comment_count).to.equal('2');
+        expect(res.body.articles[0].comment_count).to.equal('13');
       }));
     it('GET articles - filters the articles by the username value specified in the query', () => request.get('/api/articles/?author=rogersop')
       .then((res) => {
@@ -100,13 +100,29 @@ describe.only('/api', () => {
       }));
     it('GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=author')
       .then((res) => {
-        expect(res.body.articles[0].author).to.equal('butter_bridge');
-        expect(res.body.articles[res.body.articles.length - 1].author).to.equal('rogersop');
+        expect(res.body.articles[0].author).to.equal('rogersop');
+        expect(res.body.articles[res.body.articles.length - 1].author).to.equal('butter_bridge');
       }));
     it('GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=article_id')
       .then((res) => {
+        expect(res.body.articles[0].article_id).to.equal(12);
+        expect(res.body.articles[11].article_id).to.equal(1);
+      }));
+    it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=article_id&order=asc')
+      .then((res) => {
         expect(res.body.articles[0].article_id).to.equal(1);
         expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(12);
+      }));
+    it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title&order=asc')
+      .then((res) => {
+        console.log(res.body);
+        expect(res.body.articles[0].title).to.equal('A');
+        expect(res.body.articles[res.body.articles.length - 1].title).to.equal('Z');
+      }));
+    it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title')
+      .then((res) => {
+        expect(res.body.articles[0].title).to.equal('Z');
+        expect(res.body.articles[res.body.articles.length - 1].title).to.equal('A');
       }));
   });
 });
