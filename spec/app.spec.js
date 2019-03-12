@@ -48,5 +48,27 @@ describe.only('/api', () => {
       .then((res) => {
         expect(res.body.topics[0]).contains.keys('slug', 'description');
       }));
+
+    it('responds with the posted object', () => {
+      const input = {
+        slug: 'somethingPrettyUnique',
+        description: 'Cyril was a naughy man',
+      };
+
+      const output = {
+        addedTopic: [
+          {
+            slug: 'somethingPrettyUnique',
+            description: 'Cyril was a naughy man',
+          },
+        ],
+      };
+
+      return request.post('/api/topics/').send(input)
+        .expect(201)
+        .then((res) => {
+          expect(res.body).to.eql(output);
+        });
+    });
   });
 });
