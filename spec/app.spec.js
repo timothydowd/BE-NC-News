@@ -91,5 +91,12 @@ describe.only('/api', () => {
         expect(res.body.articles[1].author).to.equal('rogersop');
         expect(res.body.articles[2].author).to.equal('rogersop');
       }));
+    it.only('GET articles - filters the articles by the topic value specified in the query', () => request.get('/api/articles/?topic=mitch')
+      .then((res) => {
+        expect(res.body.articles.length).to.eql(11);
+        expect(res.body.articles[0].topic).to.equal('mitch');
+        expect(res.body.articles[1].topic).to.equal('mitch');
+        expect(res.body.articles[2].topic).to.equal('mitch');
+      }));
   });
 });
