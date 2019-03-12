@@ -84,5 +84,12 @@ describe.only('/api', () => {
       .then((res) => {
         expect(res.body.articles[0].comment_count).to.equal('13');
       }));
+    it('GET articles - filters the articles by the username value specified in the query', () => request.get('/api/articles/?author=rogersop')
+      .then((res) => {
+        expect(res.body.articles.length).to.eql(3);
+        expect(res.body.articles[0].author).to.equal('rogersop');
+        expect(res.body.articles[1].author).to.equal('rogersop');
+        expect(res.body.articles[2].author).to.equal('rogersop');
+      }));
   });
 });
