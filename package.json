@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/northcoders/BE2-NC-Knews#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
     "knex": "^0.15.2",
     "pg": "^7.6.1"
   },
@@ -35,6 +37,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "husky": "^1.1.4",
-    "mocha": "^6.0.2"
+    "mocha": "^6.0.2",
+    "supertest": "^4.0.0"
   }
 }
