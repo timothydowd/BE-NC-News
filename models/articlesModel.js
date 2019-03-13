@@ -28,3 +28,6 @@ exports.getComments = (articleId, sortBy = 'created_at', orderBy = 'desc') => co
   .from('comments')
   .where(articleId)
   .orderBy(sortBy, orderBy);
+
+
+exports.addComment = data => connection('comments').insert(data).returning('*');

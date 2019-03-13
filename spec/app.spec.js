@@ -192,7 +192,6 @@ describe.only('/api', () => {
 
     it('GET comments by article_id - status 200 - content objects must contain correct keys including a comment count and must be an array', () => request.get('/api/articles/1/comments').expect(200)
       .then((res) => {
-        console.log(res.body);
         expect(res.body.commentsByArticleId[0]).contains.keys('comment_id', 'votes', 'created_at', 'author', 'body');
         expect(res.body.commentsByArticleId).to.be.an('array');
       }));
@@ -209,6 +208,17 @@ describe.only('/api', () => {
         expect(res.body.commentsByArticleId[0].author).to.equal('butter_bridge');
         expect(res.body.commentsByArticleId[res.body.commentsByArticleId.length - 1].author).to.equal('icellusedkars');
       }));
+    it('POST article - status 201 - responds with the posted object', () => {
+      const input = {
+        body: 'I actually do sell used cars',
+        username: 'icellusedkars',
+      };
+      return request.post('/api/articles/1/comments').send(input)
+        .expect(201)
+        .then((res) => {
+          expect(res.body.addedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'created_at', 'votes', 'body');
+        });
+    });
   });
 });
 

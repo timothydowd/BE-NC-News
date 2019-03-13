@@ -1,6 +1,12 @@
 const articlesRouter = require('express').Router();
 const {
-  sendArticles, sendAddedArticle, sendArticlesByArticleId, sendVoteUpdatedArticle, sendStatusDeleted, sendCommentsByArticleId,
+  sendArticles,
+  sendAddedArticle,
+  sendArticlesByArticleId,
+  sendVoteUpdatedArticle,
+  sendStatusDeleted,
+  sendCommentsByArticleId,
+  sendAddedComment,
 } = require('../controllers/articlesController');
 
 articlesRouter.route('/').get(sendArticles)
@@ -10,7 +16,8 @@ articlesRouter.route('/:article_id').get(sendArticlesByArticleId)
   .patch(sendVoteUpdatedArticle)
   .delete(sendStatusDeleted);
 
-articlesRouter.route('/:article_id/comments').get(sendCommentsByArticleId);
+articlesRouter.route('/:article_id/comments').get(sendCommentsByArticleId)
+  .post(sendAddedComment);
 
 
 module.exports = { articlesRouter };

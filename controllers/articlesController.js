@@ -1,6 +1,6 @@
 
 const {
-  getArticles, addArticle, updateVotes, deleteArticle, getComments,
+  getArticles, addArticle, updateVotes, deleteArticle, getComments, addComment,
 } = require('../models/articlesModel');
 
 
@@ -80,5 +80,18 @@ exports.sendCommentsByArticleId = (req, res, next) => {
   getComments(articleId, sortBy, order)
     .then((commentsByArticleId) => {
       res.status(200).send({ commentsByArticleId });
+    });
+};
+
+
+exports.sendAddedComment = (req, res, next) => {
+  const authoredBody = req.body;
+  authoredBody.article_id = req.params.article_id;
+  authoredBody.author = authoredBody.username;
+  delete authoredBody.username;
+
+  addComment(authoredBody)
+    .then((addedComment) => {
+      res.status(201).send({ addedComment });
     });
 };
