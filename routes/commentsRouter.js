@@ -1,11 +1,13 @@
 const commentsRouter = require('express').Router();
 const {
   sendVoteUpdatedComment,
+  sendStatusDeletedComment,
 } = require('../controllers/commentsController');
 
 
 commentsRouter.route('/:comment_id')
-  .patch(sendVoteUpdatedComment);
+  .patch(sendVoteUpdatedComment)
+  .delete(sendStatusDeletedComment);
 
 
 module.exports = { commentsRouter };

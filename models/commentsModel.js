@@ -7,3 +7,8 @@ exports.updateCommentVotes = (commentId, newVote) => {
     .increment('votes', newVote)
     .returning('*');
 };
+
+
+exports.deleteComment = commentId => connection('comments')
+  .where(commentId)
+  .del();

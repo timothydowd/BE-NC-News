@@ -245,32 +245,16 @@ describe.only('/api', () => {
       .then((res) => {
         expect(res.body.updatedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
       }));
+
+    it('DELETE comment by comment_id - status 204 - responds with 204', () => request.delete('/api/comments/5').expect(204)
+      .then(() => {
+
+      }));
   });
 });
 
 
 /*
-
-
-```http
-PATCH /api/comments/:comment_id
-```
-##### Request body accepts
-- an object in the form `{ inc_votes: newVote }`
-
-  * `newVote` will indicate how much the `votes` property in the database should be updated by
-
-  e.g.
-
-  `{ inc_votes : 1 }` would increment the current article's vote property by 1
-
-  `{ inc_votes : -1 }` would decrement the current article's vote property by 1
-
-##### Responds with
-- the updated comment
-
-***
-
 ```http
 DELETE /api/comments/:comment_id
 ```
@@ -328,15 +312,4 @@ GET /api
 ##### Responds with
 - JSON describing all the available endpoints on your API
 
-***
-
-### Step 3 - Hosting
-
-Make sure your application and your database is hosted using heroku
-
-### Step 4 - Preparing for your review and portfolio
-
-Finally, you should write a README for this project (and remove this one). The README should be broken down like this: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
-
-It should also include the link where your heroku app is hosted.
-  */
+*/
