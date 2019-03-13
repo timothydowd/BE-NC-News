@@ -1,8 +1,8 @@
 // const { getArticles, getArticlesByQuery } = require('../models/articlesModel');
-const { getArticles, addArticle } = require('../models/articlesModel');
+const { getArticles, addArticle, updateVotes } = require('../models/articlesModel');
 
 
-exports.sendArticles = (req, res, next) => { // if a query but not a sort query
+exports.sendArticles = (req, res, next) => {
   let sortBy;
   let order;
   const conditions = {};
@@ -44,5 +44,17 @@ exports.sendAddedArticle = (req, res, next) => {
   addArticle(authoredBody)
     .then((addedArticle) => {
       res.status(201).send({ addedArticle });
+    });
+};
+
+
+exports.sendVoteUpdatedArticle = (req, res, next) => {
+  const newVote = req.body.inc_votes;
+  const articleId = req.params;
+
+
+  updateVotes(articleId, newVote)
+    .then((updatedArticle) => {
+      res.status(202).send({ updatedArticle });
     });
 };

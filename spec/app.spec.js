@@ -156,9 +156,28 @@ describe.only('/api', () => {
 
     it('GET articles by article_id - status 200 - content objects must contain correct keys including a comment count', () => request.get('/api/articles/5').expect(200)
       .then((res) => {
-        console.log(res.body);
         expect(res.body.article[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
         expect(res.body.article[0].article_id).to.equal(5);
+      }));
+
+    it('PATCH article by article_id - status 202 - responds with the updated article with 1 added vote', () => {
+      const input = { inc_votes: 1 };
+      return request.patch('/api/articles/1').send(input)
+        .expect(202)
+        .then((res) => {
+          expect(res.body.updatedArticle[0].votes).to.equal(101);
+        });
+    });
+    it('PATCH article by article_id - responds with the updated article with 50 minused votes', () => {
+      const input = { inc_votes: -50 };
+      return request.patch('/api/articles/1').send(input)
+        .then((res) => {
+          expect(res.body.updatedArticle[0].votes).to.equal(50);
+        });
+    });
+    it('PATCH article by article_id - status 202 - responds with the correct keys', () => request.patch('/api/articles/5')
+      .then((res) => {
+        expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
       }));
   });
 });
