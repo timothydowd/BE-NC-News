@@ -78,7 +78,6 @@ describe.only('/api', () => {
       }));
     it('GET articles - content objects must contain correct keys including a comment count', () => request.get('/api/articles/')
       .then((res) => {
-        console.log(res.body);
         expect(res.body.articles[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
       }));
     it('GET articles - content object must contain correct number of comments in comment_count', () => request.get('/api/articles/')
@@ -141,5 +140,21 @@ describe.only('/api', () => {
         expect(res.body.articles[0].comment_count).to.equal('13');
         expect(res.body.articles.length).to.equal(1);
       }));
+
+    it('POST article - status 201 - responds with the posted object', () => {
+      const input = {
+        title: 'A title',
+        body: 'A body',
+        topic: 'mitch',
+        username: 'icellusedkars',
+      };
+
+
+      return request.post('/api/articles/').send(input)
+        .expect(201)
+        .then((res) => {
+          expect(res.body.addedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body', 'created_at');
+        });
+    });
   });
 });
