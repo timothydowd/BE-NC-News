@@ -208,7 +208,7 @@ describe.only('/api', () => {
         expect(res.body.commentsByArticleId[0].author).to.equal('butter_bridge');
         expect(res.body.commentsByArticleId[res.body.commentsByArticleId.length - 1].author).to.equal('icellusedkars');
       }));
-    it('POST article - status 201 - responds with the posted object', () => {
+    it('POST comments - status 201 - responds with the posted object', () => {
       const input = {
         body: 'I actually do sell used cars',
         username: 'icellusedkars',
@@ -220,25 +220,37 @@ describe.only('/api', () => {
         });
     });
   });
+
+  describe.only('/comments', () => {
+    it('PATCH comment by comment_id - status 202 - responds with the updated comment with 1 added vote', () => {
+      const input = {
+        inc_votes: 1,
+      };
+      return request.patch('/api/comments/2').send(input)
+        .expect(202)
+        .then((res) => {
+          expect(res.body.updatedComment[0].votes).to.equal(15);
+        });
+    });
+    it('PATCH comment by comment_id - responds with the updated article with 50 minused votes', () => {
+      const input = {
+        inc_votes: -50,
+      };
+      return request.patch('/api/comments/4').send(input)
+        .then((res) => {
+          expect(res.body.updatedComment[0].votes).to.equal(-150);
+        });
+    });
+    it('PATCH comment by comment_id - status 202 - responds with the correct keys', () => request.patch('/api/comments/4')
+      .then((res) => {
+        expect(res.body.updatedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
+      }));
+  });
 });
 
 
 /*
 
-
-```http
-POST /api/articles/:article_id/comments
-```
-
-##### Request body accepts
-- an object with the following properties:
-  * `username`
-  * `body`
-
-##### Responds with
-- the posted comment
-
-***
 
 ```http
 PATCH /api/comments/:comment_id
