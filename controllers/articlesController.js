@@ -1,5 +1,7 @@
-// const { getArticles, getArticlesByQuery } = require('../models/articlesModel');
-const { getArticles, addArticle, updateVotes } = require('../models/articlesModel');
+
+const {
+  getArticles, addArticle, updateVotes, deleteArticle, getComments,
+} = require('../models/articlesModel');
 
 
 exports.sendArticles = (req, res, next) => {
@@ -52,9 +54,31 @@ exports.sendVoteUpdatedArticle = (req, res, next) => {
   const newVote = req.body.inc_votes;
   const articleId = req.params;
 
-
   updateVotes(articleId, newVote)
     .then((updatedArticle) => {
       res.status(202).send({ updatedArticle });
+    });
+};
+
+exports.sendStatusDeleted = (req, res, next) => {
+  const articleId = req.params;
+  deleteArticle(articleId)
+    .then(() => res.sendStatus(204));
+};
+
+
+exports.sendCommentsByArticleId = (req, res, next) => {
+  const articleId = req.params;
+  let sortBy;
+  let order;
+
+  for (const key in req.query) {
+    if (key === 'sort_by') sortBy = req.query[key];
+    if (key === 'order') order = req.query[key];
+  }
+
+  getComments(articleId, sortBy, order)
+    .then((commentsByArticleId) => {
+      res.status(200).send({ commentsByArticleId });
     });
 };

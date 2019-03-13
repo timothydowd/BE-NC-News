@@ -8,7 +8,6 @@ exports.getArticles = (sortBy = 'articles.created_at', orderBy = 'desc', conditi
   .leftJoin('comments', 'articles.article_id', 'comments.article_id')
   .groupBy('articles.article_id')
   .count('comments.comment_id as comment_count')
-
   .orderBy(sortBy, orderBy);
 
 exports.updateVotes = (articleId, newVote) => connection('articles')
@@ -18,3 +17,14 @@ exports.updateVotes = (articleId, newVote) => connection('articles')
 
 
 exports.addArticle = data => connection('articles').insert(data).returning('*');
+
+
+exports.deleteArticle = articleId => connection('articles')
+  .where(articleId)
+  .del();
+
+exports.getComments = (articleId, sortBy = 'created_at', orderBy = 'desc') => connection
+  .select('*')
+  .from('comments')
+  .where(articleId)
+  .orderBy(sortBy, orderBy);
