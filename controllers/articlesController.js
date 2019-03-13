@@ -23,6 +23,19 @@ exports.sendArticles = (req, res, next) => { // if a query but not a sort query
 };
 
 
+exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a sort query
+  let sortBy;
+  let order;
+  const conditions = {};
+  conditions[`articles.${Object.keys(req.params)[0]}`] = req.params.article_id;
+
+  getArticles(sortBy, order, conditions)
+    .then((article) => {
+      res.status(200).send({ article });
+    });
+};
+
+
 exports.sendAddedArticle = (req, res, next) => {
   const authoredBody = req.body;
   authoredBody.author = authoredBody.username;

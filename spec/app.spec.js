@@ -136,7 +136,6 @@ describe.only('/api', () => {
       }));
     xit('GET articles - handles queries of joined columns (comment_count=0)', () => request.get('/api/articles/?comment_count=13')
       .then((res) => {
-        console.log(res.body);
         expect(res.body.articles[0].comment_count).to.equal('13');
         expect(res.body.articles.length).to.equal(1);
       }));
@@ -148,13 +147,18 @@ describe.only('/api', () => {
         topic: 'mitch',
         username: 'icellusedkars',
       };
-
-
       return request.post('/api/articles/').send(input)
         .expect(201)
         .then((res) => {
           expect(res.body.addedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body', 'created_at');
         });
     });
+
+    it('GET articles by article_id - status 200 - content objects must contain correct keys including a comment count', () => request.get('/api/articles/5').expect(200)
+      .then((res) => {
+        console.log(res.body);
+        expect(res.body.article[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+        expect(res.body.article[0].article_id).to.equal(5);
+      }));
   });
 });
