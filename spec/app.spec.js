@@ -78,6 +78,7 @@ describe.only('/api', () => {
       }));
     it('GET articles - content objects must contain correct keys including a comment count', () => request.get('/api/articles/')
       .then((res) => {
+        console.log(res.body);
         expect(res.body.articles[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
       }));
     it('GET articles - content object must contain correct number of comments in comment_count', () => request.get('/api/articles/')
@@ -115,7 +116,6 @@ describe.only('/api', () => {
       }));
     it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title&order=asc')
       .then((res) => {
-        console.log(res.body);
         expect(res.body.articles[0].title).to.equal('A');
         expect(res.body.articles[res.body.articles.length - 1].title).to.equal('Z');
       }));
@@ -123,6 +123,23 @@ describe.only('/api', () => {
       .then((res) => {
         expect(res.body.articles[0].title).to.equal('Z');
         expect(res.body.articles[res.body.articles.length - 1].title).to.equal('A');
+      }));
+    it('GET articles - handles multiple queries at once', () => request.get('/api/articles/?sort_by=article_id&author=rogersop&order=asc')
+      .then((res) => {
+        expect(res.body.articles[0].article_id).to.equal(4);
+        expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(10);
+        expect(res.body.articles[0].author).to.equal('rogersop');
+      }));
+    it('GET articles - handles queries of joined columns (sort_by=comment_count)', () => request.get('/api/articles/?sort_by=comment_count')
+      .then((res) => {
+        expect(res.body.articles[0].comment_count).to.equal('13');
+        expect(res.body.articles[res.body.articles.length - 1].comment_count).to.equal('0');
+      }));
+    xit('GET articles - handles queries of joined columns (comment_count=0)', () => request.get('/api/articles/?comment_count=13')
+      .then((res) => {
+        console.log(res.body);
+        expect(res.body.articles[0].comment_count).to.equal('13');
+        expect(res.body.articles.length).to.equal(1);
       }));
   });
 });
