@@ -11,10 +11,21 @@ const {
 } = require('../connection');
 const request = require('supertest')(app);
 
-describe.only('/api', () => {
+describe('/api', () => {
   beforeEach(() => connection.seed.run());
 
   after(() => connection.destroy());
+
+
+  it('GET all endpoints - status:200 responds with a json containing all endpoints', () => request.get('/api/').expect(200)
+    .then((res) => {
+      expect(res.body.endpoints).to.contains.keys('/api', '/api/users', '/api/topics', '/api/articles', '/api/articles:article_id', '/api/articles/:article_id/comments', '/api/comments/:comment_id');
+    }));
+
+  it.only('GET error handling - status 404 for unavailable route', () => request.get('/api/dsdsd').expect(404)
+    .then((res) => {
+      expect(res.body.message).to.equal('404 - incorrect route');
+    }));
 
 
   describe('/topics', () => {
@@ -287,12 +298,5 @@ describe.only('/api', () => {
           expect(res.body).to.eql(output);
         });
     });
-  });
-
-  describe('/api', () => {
-    it('GET all endpoints - status:200 responds with a json containing all endpoints', () => request.get('/api/').expect(200)
-      .then((res) => {
-        expect(res.body.endpoints).to.contains.keys('/api', '/api/users', '/api/topics', '/api/articles', '/api/articles:article_id', '/api/articles/:article_id/comments', '/api/comments/:comment_id');
-      }));
   });
 });
