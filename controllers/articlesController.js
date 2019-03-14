@@ -21,6 +21,9 @@ exports.sendArticles = (req, res, next) => {
   getArticles(sortBy, order, conditions)
     .then((articles) => {
       res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 

@@ -67,14 +67,14 @@ describe('/api', () => {
         });
     });
 
-    describe.only('error handling', () => {
+    describe('error handling', () => {
       it('POST topic - status 400 - missing slug or description', () => {
         const input = {};
 
         return request.post('/api/topics/').send(input)
           .expect(400)
           .then((res) => {
-            expect(res.body.msg).to.eql('400 - missing parameters in request body');
+            expect(res.body.msg).to.eql('400 - Failing row contains (null, null).');
           });
       });
       it('POST topic - status 422 - inputting a slug that already exists', () => {
@@ -240,6 +240,14 @@ describe('/api', () => {
         .then((res) => {
           expect(res.body.addedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'created_at', 'votes', 'body');
         });
+    });
+
+    describe.only('error handling', () => {
+      it('GET ` sort_by a column that doesnt exist', () => request.get('/api/articles?sort_by=chocolate')
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).to.eql('400 - undefined');
+        }));
     });
   });
 
