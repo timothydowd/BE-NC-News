@@ -252,18 +252,14 @@ describe.only('/api', () => {
         expect(res.body.users[0]).contains.keys('username', 'name', 'avatar_url');
       }));
 
-    it('GET users by username - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/icellusedkars')
+    it('GET users by username - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/icellusedkars').expect(200)
       .then((res) => {
-        console.log(res.body);
         const output = {
-          user:
-          [{
+          user: [{
             username: 'icellusedkars',
             name: 'sam',
-            avatar_url:
-               'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
-          },
-          ],
+            avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
+          }],
         };
         expect(res.body.user[0]).contains.keys('username', 'name', 'avatar_url');
         expect(res.body).to.eql(output);
@@ -277,8 +273,11 @@ describe.only('/api', () => {
       };
 
       const output = {
-        addedUser:
-        [{ username: 'cyrilsneer', name: 'cyril', avatar_url: 'img' }],
+        addedUser: [{
+          username: 'cyrilsneer',
+          name: 'cyril',
+          avatar_url: 'img',
+        }],
       };
 
       return request.post('/api/users/').send(input)
@@ -291,40 +290,9 @@ describe.only('/api', () => {
   });
 
   describe('/api', () => {
-    xit('GET users - status:200 responds with an array of users', () => request.get('/api/users/').expect(200)
+    it('GET all endpoints - status:200 responds with a json containing all endpoints', () => request.get('/api/').expect(200)
       .then((res) => {
-        expect(res.body.users).to.be.an('array');
-        expect(res.body.users[1]).to.eql({
-          username: 'icellusedkars',
-          name: 'sam',
-          avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
-        });
+        expect(res.body.endpoints).to.contains.keys('/api', '/api/users', '/api/topics', '/api/articles', '/api/articles:article_id', '/api/articles/:article_id/comments', '/api/comments/:comment_id');
       }));
   });
 });
-
-
-/*
-
-
-***
-
-```http
-GET /api/users/:username
-```
-
-##### Responds with
-- a user object which should have the following properties:
-  * `username`
-  * `avatar_url`
-  * `name`
-
-***
-
-```http
-GET /api
-```
-##### Responds with
-- JSON describing all the available endpoints on your API
-
-*/

@@ -1,0 +1,10 @@
+{
+    "/api": "GET responds with this file",
+    "/api/users": "GET responds with all users, POST adds a user",
+    "/api/users/:username": "GET responds with a specified user",
+    "/api/topics": "GET responds with all topics, POST adds a topic",
+    "/api/articles": "GET responds with all articles, POST adds an article",
+    "/api/articles:article_id": "GET responds with a specified article, PATCH updates a specified articles VOTE count, DELETE deltes a specified article",
+    "/api/articles/:article_id/comments": "GET responds with all comments in specified article, POST adds a comment to specified article",
+    "/api/comments/:comment_id": "PATCH updates specified comment VOTE count, DELETE deletes a specified comment"
+}
