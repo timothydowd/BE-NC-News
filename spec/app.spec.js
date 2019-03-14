@@ -77,6 +77,18 @@ describe('/api', () => {
             expect(res.body.msg).to.eql('400 - missing parameters in request body');
           });
       });
+      it('POST topic - status 422 - inputting a slug that already exists', () => {
+        const input = {
+          slug: 'mitch',
+          description: 'description here',
+        };
+
+        return request.post('/api/topics/').send(input)
+          .expect(422)
+          .then((res) => {
+            expect(res.body.msg).to.eql('422 - Key (slug)=(mitch) already exists.');
+          });
+      });
     });
   });
 

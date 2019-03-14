@@ -13,12 +13,11 @@ exports.handle400 = (err, req, res, next) => {
   } else next(err);
 };
 
-exports.handle405 = (err, req, res, next) => {
+exports.handle422 = (err, req, res, next) => {
   const codes = {
-    23502: 'violates not null violation',
-
+    23505: `422 - ${err.detail}`,
   };
-
-  if (codes[err.code]) res.status(400).send({ msg: codes[err.code] });
-  else next(err);
+  if (codes[err.code]) {
+    res.status(422).send({ msg: codes[err.code] });
+  } else next(err);
 };
