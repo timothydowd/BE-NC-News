@@ -16,7 +16,6 @@ exports.sendVoteUpdatedComment = (req, res, next) => {
 
 
 exports.sendStatusDeletedComment = (req, res, next) => {
-  console.log('in cont');
   const commentId = req.params;
   deleteComment(commentId)
     .then(() => res.sendStatus(204));

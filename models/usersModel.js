@@ -1,3 +1,5 @@
 const { connection } = require('../connection');
 
-exports.getUsers = () => connection('users').select('*');
+exports.getUsers = (userName = {}) => connection('users').select('*').where(userName);
+
+exports.addUser = data => connection('users').insert(data).returning('*');

@@ -16,22 +16,6 @@ describe.only('/api', () => {
 
   after(() => connection.destroy());
 
-  describe('/users', () => {
-    it('GET users - status:200 responds with an array of users', () => request.get('/api/users/').expect(200)
-      .then((res) => {
-        expect(res.body.users).to.be.an('array');
-        expect(res.body.users[1]).to.eql({
-          username: 'icellusedkars',
-          name: 'sam',
-          avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
-        });
-      }));
-
-    it('GET users - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/')
-      .then((res) => {
-        expect(res.body.users[0]).contains.keys('username', 'name', 'avatar_url');
-      }));
-  });
 
   describe('/topics', () => {
     it('GET topics - status:200 responds with an array of topics', () => request.get('/api/topics/')
@@ -221,7 +205,7 @@ describe.only('/api', () => {
     });
   });
 
-  describe.only('/comments', () => {
+  describe('/comments', () => {
     it('PATCH comment by comment_id - status 202 - responds with the updated comment with 1 added vote', () => {
       const input = {
         inc_votes: 1,
@@ -251,46 +235,77 @@ describe.only('/api', () => {
 
       }));
   });
+
+  describe('/users', () => {
+    it('GET users - status:200 responds with an array of users', () => request.get('/api/users/').expect(200)
+      .then((res) => {
+        expect(res.body.users).to.be.an('array');
+        expect(res.body.users[1]).to.eql({
+          username: 'icellusedkars',
+          name: 'sam',
+          avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
+        });
+      }));
+
+    it('GET users - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/')
+      .then((res) => {
+        expect(res.body.users[0]).contains.keys('username', 'name', 'avatar_url');
+      }));
+
+    it('GET users by username - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/icellusedkars')
+      .then((res) => {
+        console.log(res.body);
+        const output = {
+          user:
+          [{
+            username: 'icellusedkars',
+            name: 'sam',
+            avatar_url:
+               'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
+          },
+          ],
+        };
+        expect(res.body.user[0]).contains.keys('username', 'name', 'avatar_url');
+        expect(res.body).to.eql(output);
+      }));
+
+    it('POST user - status 201 - responds with the posted object', () => {
+      const input = {
+        username: 'cyrilsneer',
+        avatar_url: 'img',
+        name: 'cyril',
+      };
+
+      const output = {
+        addedUser:
+        [{ username: 'cyrilsneer', name: 'cyril', avatar_url: 'img' }],
+      };
+
+      return request.post('/api/users/').send(input)
+        .expect(201)
+        .then((res) => {
+          expect(res.body.addedUser[0]).contains.keys('username', 'avatar_url', 'name');
+          expect(res.body).to.eql(output);
+        });
+    });
+  });
+
+  describe('/api', () => {
+    xit('GET users - status:200 responds with an array of users', () => request.get('/api/users/').expect(200)
+      .then((res) => {
+        expect(res.body.users).to.be.an('array');
+        expect(res.body.users[1]).to.eql({
+          username: 'icellusedkars',
+          name: 'sam',
+          avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
+        });
+      }));
+  });
 });
 
 
 /*
-```http
-DELETE /api/comments/:comment_id
-```
 
-##### Should
-- delete the given comment by `comment_id`
-
-##### Responds with
-- status 204 and no content
-
-***
-
-```http
-GET /api/users
-```
-
-##### Responds with
-- an array of user objects, each of which should have the following properties:
-  * `username`
-  * `avatar_url`
-  * `name`
-
-***
-
-```http
-POST /api/users
-```
-
-##### Request body accepts
-- an object containing the following properties:
-  * `username`
-  * `avatar_url`
-  * `name`
-
-##### Responds with
-- the posted user
 
 ***
 
