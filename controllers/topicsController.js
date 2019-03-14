@@ -13,5 +13,8 @@ exports.sendAddedTopic = (req, res, next) => {
   addTopic(newTopic)
     .then((addedTopic) => {
       res.status(201).send({ addedTopic });
+    })
+    .catch((err) => {
+      next(err);
     });
 };

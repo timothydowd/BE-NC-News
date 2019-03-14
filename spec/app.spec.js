@@ -22,10 +22,12 @@ describe('/api', () => {
       expect(res.body.endpoints).to.contains.keys('/api', '/api/users', '/api/topics', '/api/articles', '/api/articles:article_id', '/api/articles/:article_id/comments', '/api/comments/:comment_id');
     }));
 
-  it.only('GET error handling - status 404 for unavailable route', () => request.get('/api/dsdsd').expect(404)
-    .then((res) => {
-      expect(res.body.message).to.equal('404 - incorrect route');
-    }));
+  describe('error handling', () => {
+    it('GET error handling - status 404 for unavailable route', () => request.get('/api/dsdsd').expect(404)
+      .then((res) => {
+        expect(res.body.message).to.equal('404 - incorrect route');
+      }));
+  });
 
 
   describe('/topics', () => {
@@ -64,7 +66,20 @@ describe('/api', () => {
           expect(res.body).to.eql(output);
         });
     });
+
+    describe.only('error handling', () => {
+      it('POST topic - status 400 - missing slug or description', () => {
+        const input = {};
+
+        return request.post('/api/topics/').send(input)
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.eql('400 - missing parameters in request body');
+          });
+      });
+    });
   });
+
 
   describe('/articles', () => {
     it('GET articles - status:200 responds with an array of articles', () => request.get('/api/articles/').expect(200)
