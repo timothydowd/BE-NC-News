@@ -22,6 +22,7 @@ exports.sendArticles = (req, res, next) => {
 
   getArticles(sortBy, order, conditions)
     .then((articles) => {
+      if (articles.length === 0) next({ code: 'notFound', detail: 'record not found' });
       res.status(200).send({ articles });
     })
     .catch((err) => {

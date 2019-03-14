@@ -248,11 +248,16 @@ describe('/api', () => {
         .then((res) => {
           expect(res.body.msg).to.eql('400 - bad request');
         }));
-      it.only('GET - 400 - sort order is something other than asc or desc', () => request.get('/api/articles?sort_by=author&&order=harold')
+      it('GET - 400 - sort order is something other than asc or desc', () => request.get('/api/articles?sort_by=author&&order=harold')
         .expect(400)
         .then((res) => {
           console.log(res.body);
           expect(res.body.msg).to.eql('400 - sort by order must be asc or desc.');
+        }));
+      it.only('GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).to.eql('404 - record not found');
         }));
     });
   });
