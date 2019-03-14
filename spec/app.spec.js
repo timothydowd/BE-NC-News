@@ -254,11 +254,36 @@ describe('/api', () => {
           console.log(res.body);
           expect(res.body.msg).to.eql('400 - sort by order must be asc or desc.');
         }));
-      it.only('GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
+      it('GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
         .expect(404)
         .then((res) => {
           expect(res.body.msg).to.eql('404 - record not found');
         }));
+      xit('GET - 200 -`author` / `topic` that exists but does not have any articles associated with it', () => {
+        const input = {
+          username: 'cyrilsneer',
+          avatar_url: 'img',
+          name: 'cyril',
+        };
+
+        return request.post('/api/users').send(input).get('/api/articles?author=cyrilsneer')
+          .then((res) => {
+            console.log(res);
+            expect(res.body.msg).to.eql('404 - record not found');
+          });
+      });
+
+      it.only('POST 400 - No `title` / `body` / `topic` / `username` in request body: 400', () => {
+        const input = {
+          title: 'A title',
+          body: 'A body',
+          topic: 'mitch',
+        };
+        return request.post('/api/articles').send(input)
+          .then((res) => {
+            expect(res.body.msg.slice(0, -31)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null, ');
+          });
+      });
     });
   });
 

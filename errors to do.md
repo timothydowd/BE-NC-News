@@ -33,17 +33,11 @@ For each thing that could go wrong, make a test with your expected status code a
 
 - Only way this can go wrong: 500
 
-### POST `/api/topics`
-
-- No `slug` / `description` in request body: 400
-- `slug` that already exists in the database: 422
 
 ### GET `/api/articles?author=paul`
 
 - Bad queries:
-  - `sort_by` a column that doesn't exist: 400 / 200
-  - `order` !== "asc" / "desc": 400 / 200
-  - `author` / `topic` that is not in the database: 404
+  
   - `author` / `topic` that exists but does not have any articles associated with it: 200 with { articles: [] }
 
 ### POST `/api/articles`

@@ -53,6 +53,9 @@ exports.sendAddedArticle = (req, res, next) => {
   addArticle(authoredBody)
     .then((addedArticle) => {
       res.status(201).send({ addedArticle });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 

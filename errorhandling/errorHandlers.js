@@ -6,7 +6,7 @@ exports.unrecognizedRoute = (req, res, next) => {
 
 exports.handle400 = (err, req, res, next) => {
   const codes = {
-    23502: `400 - ${err.detail}`, // missing parameters in req body for topics post
+    23502: `400 - ${err.detail}`, // missing parameters in req body for post
     42703: `400 - ${err.detail || 'bad request'}`, // non exisiting colum in sort_by param in get articles
     orderErr: `400 - ${err.detail}`,
   };
