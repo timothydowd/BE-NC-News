@@ -8,7 +8,8 @@ exports.handle400 = (err, req, res, next) => {
   console.log(err);
   const codes = {
     23502: `400 - ${err.detail}`, // missing parameters in req body for topics post
-    42703: `400 - ${err.detail}`, // non exisiting colum in sort_by param in get articles
+    42703: `400 - ${err.detail || 'bad request'}`, // non exisiting colum in sort_by param in get articles
+    orderErr: `400 - ${err.detail}`,
   };
   if (codes[err.code]) {
     res.status(400).send({ msg: codes[err.code] });

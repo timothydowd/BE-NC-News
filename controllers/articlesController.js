@@ -13,8 +13,10 @@ exports.sendArticles = (req, res, next) => {
     if (key === 'sort_by') {
       if (req.query[key] === 'comment_count') sortBy = 'comment_count';
       else sortBy = `articles.${req.query[key]}`;
-    } else if (key === 'order') order = req.query[key];
-    else if (key === 'comment_count') conditions.comment_count = req.query[key]; // this needs fixing
+    } else if (key === 'order') {
+      if (req.query.order !== 'asc' || req.query.order !== 'desc') next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
+      order = req.query[key];
+    } else if (key === 'comment_count') conditions.comment_count = req.query[key]; // this needs fixing
     else conditions[`articles.${key}`] = req.query[key];
   }
 
@@ -36,7 +38,8 @@ exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a 
 
   getArticles(sortBy, order, conditions)
     .then((article) => {
-      res.status(200).send({ article });
+      if (article.length === 0) next({ code: 404, detail: 'Article not found' });
+      else res.status(200).send({ article });
     });
 };
 

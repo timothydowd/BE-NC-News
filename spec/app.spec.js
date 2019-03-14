@@ -242,11 +242,17 @@ describe('/api', () => {
         });
     });
 
-    describe.only('error handling', () => {
-      it('GET ` sort_by a column that doesnt exist', () => request.get('/api/articles?sort_by=chocolate')
+    describe('error handling', () => {
+      it('GET - 400 -sort_by a column that doesnt exist', () => request.get('/api/articles?sort_by=chocolate')
         .expect(400)
         .then((res) => {
-          expect(res.body.msg).to.eql('400 - undefined');
+          expect(res.body.msg).to.eql('400 - bad request');
+        }));
+      it.only('GET - 400 - sort order is something other than asc or desc', () => request.get('/api/articles?sort_by=author&&order=harold')
+        .expect(400)
+        .then((res) => {
+          console.log(res.body);
+          expect(res.body.msg).to.eql('400 - sort by order must be asc or desc.');
         }));
     });
   });
