@@ -9,7 +9,7 @@ exports.sendArticles = (req, res, next) => {
   let order;
   const conditions = {};
 
-  console.log(req.query);
+  
 
   /*
   for (const key in req.query) {
