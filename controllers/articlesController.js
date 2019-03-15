@@ -9,6 +9,9 @@ exports.sendArticles = (req, res, next) => {
   let order;
   const conditions = {};
 
+  console.log(req.query);
+
+  /*
   for (const key in req.query) {
     if (key === 'sort_by') {
       if (req.query[key] === 'comment_count') sortBy = 'comment_count';
@@ -19,6 +22,25 @@ exports.sendArticles = (req, res, next) => {
     } else if (key === 'comment_count') conditions.comment_count = req.query[key]; // this needs fixing
     else conditions[`articles.${key}`] = req.query[key];
   }
+  */
+
+
+  if (req.query.sort_by){ 
+    if(req.query.sort_by === 'comment_count') sortBy = 'comment_count'
+    else sortBy = `articles.${req.query.sort_by}`;
+  }
+  if (req.query.order) order = req.query.order;
+  if (order !== 'asc' && order !== 'desc' && order !== undefined) next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
+  
+  for (key in req.query) {
+    if (key !== 'sort_by' && key !== 'order') {
+      conditions[`articles.${key}`] = req.query[key];
+    }
+  }
+
+  // getUsers()
+
+  // getTopics()
 
   getArticles(sortBy, order, conditions)
     .then((articles) => {
@@ -49,7 +71,6 @@ exports.sendAddedArticle = (req, res, next) => {
   const authoredBody = req.body;
   authoredBody.author = authoredBody.username;
   delete authoredBody.username;
-  console.log('in cont');
   addArticle(authoredBody)
     .then((addedArticle) => {
       res.status(201).send({ addedArticle });

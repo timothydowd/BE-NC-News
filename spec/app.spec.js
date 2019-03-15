@@ -147,6 +147,7 @@ describe('/api', () => {
       }));
     it('GET articles - handles multiple queries at once', () => request.get('/api/articles/?sort_by=article_id&author=rogersop&order=asc')
       .then((res) => {
+        // console.log(res.body)
         expect(res.body.articles[0].article_id).to.equal(4);
         expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(10);
         expect(res.body.articles[0].author).to.equal('rogersop');
@@ -256,18 +257,19 @@ describe('/api', () => {
         .then((res) => {
           expect(res.body.msg).to.eql('404 - record not found');
         }));
-      xit('GET - 200 -`author` / `topic` that exists but does not have any articles associated with it', () => {
+
+      it('GET - 200 -`author` / `topic` that exists but does not have any articles associated with it { articles: [] }', () => {
         const input = {
           username: 'cyrilsneer',
           avatar_url: 'img',
           name: 'cyril',
         };
-
-        return request.post('/api/users').send(input).get('/api/articles?author=cyrilsneer')
-          .then((res) => {
-            console.log(res);
-            expect(res.body.msg).to.eql('404 - record not found');
-          });
+        return request.post('/api/users').send(input).expect(201)
+          .then(() => request.get('/api/articles?author=cyrilsneer').expect(200)
+            .then((res) => {
+              console.log(res);
+              expect(res.body.msg).to.eql({ articles: [] });
+            }));
       });
 
       it('POST 400 - No `title` / `body` / `topic` / `username` in request body', () => {
@@ -279,10 +281,11 @@ describe('/api', () => {
         return request.post('/api/articles').send(input)
           .expect(400)
           .then((res) => {
-            expect(res.body.msg.slice(0, -31)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null, ');
+            expect(res.body.msg.slice(0, -33)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null');
           });
       });
-      it.only('POST 400 - `topic` / `username` that doesnt exist: 400', () => {
+
+      it('POST 400 - `topic` / `username` that doesnt exist: 400', () => {
         const input = {
           title: 'A title',
           body: 'A body',

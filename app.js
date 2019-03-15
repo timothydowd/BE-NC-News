@@ -13,6 +13,6 @@ app.use('/*', unrecognizedRoute);
 app.use(handle400);
 app.use(handle422);
 app.use(handle404);
-app.use(handle500);
+// app.use(handle500);
 
 module.exports = { app };
