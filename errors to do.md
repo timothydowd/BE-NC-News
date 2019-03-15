@@ -40,10 +40,6 @@ For each thing that could go wrong, make a test with your expected status code a
   
   - `author` / `topic` that exists but does not have any articles associated with it: 200 with { articles: [] }
 
-### POST `/api/articles`
-
-- No `title` / `body` / `topic` / `username` in request body: 400
-- `topic` / `username` that doesn't exist: 404 / 400
 
 ### GET `/api/articles/:article_id`
 

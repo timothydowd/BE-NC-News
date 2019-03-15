@@ -206,10 +206,7 @@ describe('/api', () => {
         expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
       }));
 
-    it('DELETE article by article_id - status 204 - responds with 204', () => request.delete('/api/articles/5').expect(204)
-      .then(() => {
-
-      }));
+    it('DELETE article by article_id - status 204 - responds with 204', () => request.delete('/api/articles/5').expect(204));
 
 
     it('GET comments by article_id - status 200 - content objects must contain correct keys including a comment count and must be an array', () => request.get('/api/articles/1/comments').expect(200)
@@ -273,15 +270,28 @@ describe('/api', () => {
           });
       });
 
-      it.only('POST 400 - No `title` / `body` / `topic` / `username` in request body: 400', () => {
+      it('POST 400 - No `title` / `body` / `topic` / `username` in request body', () => {
         const input = {
           title: 'A title',
           body: 'A body',
           topic: 'mitch',
         };
         return request.post('/api/articles').send(input)
+          .expect(400)
           .then((res) => {
             expect(res.body.msg.slice(0, -31)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null, ');
+          });
+      });
+      it.only('POST 400 - `topic` / `username` that doesnt exist: 400', () => {
+        const input = {
+          title: 'A title',
+          body: 'A body',
+          topic: 'notatopic',
+          username: 'icellusedkars',
+        };
+        return request.post('/api/articles').send(input)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Key (topic)=(notatopic) is not present in table "topics".');
           });
       });
     });
