@@ -264,11 +264,13 @@ describe('/api', () => {
           name: 'cyril',
         };
         return request.post('/api/users').send(input).expect(201)
-          .then(() => request.get('/api/articles?author=cyrilsneer').expect(200)
+          .then((res) => {
+            //console.log(res.body)
+            return request.get('/api/articles?author=cyrilsneer').expect(200)
             .then((res) => {
               console.log(res);
               expect(res.body.msg).to.eql({ articles: [] });
-            }));
+            })});
       });
 
       it('POST 400 - No `title` / `body` / `topic` / `username` in request body', () => {

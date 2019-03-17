@@ -38,7 +38,7 @@ For each thing that could go wrong, make a test with your expected status code a
 
 - Bad queries:
   
-  - `author` / `topic` that exists but does not have any articles associated with it: 200 with { articles: [] }
+  - `author` / `topic` that exists but does not have any articles associated with it: 200 with { articles: [] }****************
 
 
 ### GET `/api/articles/:article_id`
