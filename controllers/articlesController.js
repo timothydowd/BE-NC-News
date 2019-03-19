@@ -5,80 +5,44 @@ const {
 const { getUsers } = require('../models/usersModel')
 const { getTopics } = require('../models/topicsModel')
 
-/*
+
+
 exports.sendArticles = (req, res, next) => {
-  let sortBy;
-  let order;
-  const conditions = {};
 
-  //console.log(req.query)
+  const conditions = {}
+  let {
+    sort_by,
+    order
+  } = req.query
 
-  if (req.query.sort_by){ 
-    if(req.query.sort_by === 'comment_count') sortBy = 'comment_count'
-    else sortBy = `articles.${req.query.sort_by}`;
-  }
-  if (req.query.order) order = req.query.order;
+  
+  //const author = {username: req.query}
+
+  if (sort_by !== 'comment_count' && sort_by !== undefined) sort_by = `articles.${req.query.sort_by}`
   if (order !== 'asc' && order !== 'desc' && order !== undefined) next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
   
   for (key in req.query) {
     if (key !== 'sort_by' && key !== 'order') {
-      conditions[`articles.${key}`] = req.query[key];
+      conditions[`articles.${key}`] = req.query[key]; // all this formats the res.query  so it can be accepted by get articles
     }
   }
 
-  const checkArticles = getArticles(sortBy, order, conditions)
-    .then((articles) => {
-      return articles
-  })
+  console.log(req.query)
+    
+  console.log(conditions)
+    //console.log(author, topic)
+   /* 
 
-  const checkUsers = getUsers(req.query.author)
-    .then((user) => {
-      return user
-  })
-  
-  const checkTopics = getTopic(req.query.topic)
-    .then((topic) => {
-      return topic
-  })
-  
-  return Promise.all([checkArticles, checkUsers, checkTopics])
-    .then(([articles, checkedUser, checkedTopic]) => {
-      console.log({articles})
-      console.log({checkedUser})
-      console.log({checkedTopic})
+    return Promise.all([getArticles(sort_by, order, conditions), getUsers({username: author}), getTopics(topic)])
+    .then(([articles, users, topics]) => {
+      console.log('articles: ',articles)
+      console.log('users: ',users)
+      console.log('topics: ',topics)
     })
+    */
 
-};
-
-*/
-
-exports.sendArticles = (req, res, next) => {
-  let sortBy;
-  let order;
-  const conditions = {};
-
-  //console.log(req.query)
   
-  if (req.query.sort_by){ 
-    if(req.query.sort_by === 'comment_count') sortBy = 'comment_count'
-    else sortBy = `articles.${req.query.sort_by}`;
-  }
-  if (req.query.order) order = req.query.order;
-  if (order !== 'asc' && order !== 'desc' && order !== undefined) next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
-  
-  for (key in req.query) {
-    if (key !== 'sort_by' && key !== 'order') {
-      conditions[`articles.${key}`] = req.query[key];
-    }
-  }
-  
-
-  for (key in conditions) {
-    if (key === 'articles.author') checkUserExists = getUsers(conditions[key])
-    if (key === 'articles.topic') checkTopicExists = getTopics(conditions[key])
-  }
-  
-  getArticles(sortBy, order, conditions)
+  getArticles(sort_by, order, conditions)
     .then((articles) => {
       if (articles.length === 0) next({ code: 'notFound', detail: 'record not found' });
       res.status(200).send({ articles });
@@ -86,10 +50,10 @@ exports.sendArticles = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
-
-
-
+  
 };
+
+
 
 
 exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a sort query

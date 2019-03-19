@@ -15,13 +15,13 @@ describe('/api', () => {
   after(() => connection.destroy());
 
 
-  it('GET all endpoints - status:200 responds with a json containing all endpoints', () => request.get('/api/').expect(200)
+  it('1-GET all endpoints - status:200 responds with a json containing all endpoints', () => request.get('/api/').expect(200)
     .then((res) => {
       expect(res.body.endpoints).to.contains.keys('/api', '/api/users', '/api/topics', '/api/articles', '/api/articles:article_id', '/api/articles/:article_id/comments', '/api/comments/:comment_id');
     }));
 
   describe('error handling', () => {
-    it('GET error handling - status 404 for unavailable route', () => request.get('/api/dsdsd').expect(404)
+    it('2-GET error handling - status 404 for unavailable route', () => request.get('/api/dsdsd').expect(404)
       .then((res) => {
         expect(res.body.message).to.equal('404 - incorrect route');
       }));
@@ -29,7 +29,7 @@ describe('/api', () => {
 
 
   describe('/topics', () => {
-    it('GET topics - status:200 responds with an array of topics', () => request.get('/api/topics/')
+    it('3-GET topics - status:200 responds with an array of topics', () => request.get('/api/topics/')
       .then((res) => {
         expect(res.body.topics).to.be.an('array');
         expect(res.body.topics.length).to.equal(2);
@@ -39,13 +39,13 @@ describe('/api', () => {
         });
       }));
 
-    it('GET topics - content objects must contain the keys slug and description', () => request.get('/api/topics/').expect(200)
+    it('4-GET topics - content objects must contain the keys slug and description', () => request.get('/api/topics/').expect(200)
       .then((res) => {
         expect(res.body.topics[0]).contains.keys('slug', 'description');
       }));
 
 
-    it('POST topic - status 201 - responds with the posted object', () => {
+    it('5-POST topic - status 201 - responds with the posted object', () => {
       const input = {
         slug: 'somethingPrettyUnique',
         description: 'Cyril was a naughy man',
@@ -66,7 +66,7 @@ describe('/api', () => {
     });
 
     describe('error handling', () => {
-      it('POST topic - status 400 - missing slug or description', () => {
+      it('6-POST topic - status 400 - missing slug or description', () => {
         const input = {};
 
         return request.post('/api/topics/').send(input)
@@ -75,7 +75,7 @@ describe('/api', () => {
             expect(res.body.msg).to.eql('400 - Failing row contains (null, null).');
           });
       });
-      it('POST topic - status 422 - inputting a slug that already exists', () => {
+      it('7-POST topic - status 422 - inputting a slug that already exists', () => {
         const input = {
           slug: 'mitch',
           description: 'description here',
@@ -92,76 +92,77 @@ describe('/api', () => {
 
 
   describe('/articles', () => {
-    it('GET articles - status:200 responds with an array of articles', () => request.get('/api/articles/').expect(200)
+    it('8-GET articles - status:200 responds with an array of articles', () => request.get('/api/articles/').expect(200)
       .then((res) => {
         expect(res.body.articles).to.be.an('array');
       }));
-    it('GET articles - content objects must contain correct keys including a comment count', () => request.get('/api/articles/')
+    it('9-GET articles - content objects must contain correct keys including a comment count', () => request.get('/api/articles/')
       .then((res) => {
         expect(res.body.articles[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
       }));
-    it('GET articles - content object must contain correct number of comments in comment_count', () => request.get('/api/articles/')
+    it('10-GET articles - content object must contain correct number of comments in comment_count', () => request.get('/api/articles/')
       .then((res) => {
         expect(res.body.articles[0].comment_count).to.equal('13');
       }));
-    it('GET articles - filters the articles by the username value specified in the query', () => request.get('/api/articles/?author=rogersop')
+    it('11-GET articles - filters the articles by the username value specified in the query', () => request.get('/api/articles/?author=rogersop')
       .then((res) => {
         expect(res.body.articles.length).to.eql(3);
         expect(res.body.articles[0].author).to.equal('rogersop');
         expect(res.body.articles[1].author).to.equal('rogersop');
         expect(res.body.articles[2].author).to.equal('rogersop');
       }));
-    it('GET articles - filters the articles by the topic value specified in the query', () => request.get('/api/articles/?topic=mitch')
+    it('12-GET articles - filters the articles by the topic value specified in the query', () => request.get('/api/articles/?topic=mitch')
       .then((res) => {
         expect(res.body.articles.length).to.eql(11);
         expect(res.body.articles[0].topic).to.equal('mitch');
         expect(res.body.articles[1].topic).to.equal('mitch');
         expect(res.body.articles[2].topic).to.equal('mitch');
       }));
-    it('GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=author')
+    it('13-GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=author')
       .then((res) => {
+        //console.log(res.body)
         expect(res.body.articles[0].author).to.equal('rogersop');
         expect(res.body.articles[res.body.articles.length - 1].author).to.equal('butter_bridge');
       }));
-    it('GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=article_id')
+    it('14-GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=article_id')
       .then((res) => {
         expect(res.body.articles[0].article_id).to.equal(12);
         expect(res.body.articles[11].article_id).to.equal(1);
       }));
-    it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=article_id&order=asc')
+    it('15-GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=article_id&order=asc')
       .then((res) => {
         expect(res.body.articles[0].article_id).to.equal(1);
         expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(12);
       }));
-    it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title&order=asc')
+    it('16-GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title&order=asc')
       .then((res) => {
         expect(res.body.articles[0].title).to.equal('A');
         expect(res.body.articles[res.body.articles.length - 1].title).to.equal('Z');
       }));
-    it('GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title')
+    it('17-GET articles - sorts articles in ascending or descending specified in query', () => request.get('/api/articles/?sort_by=title')
       .then((res) => {
         expect(res.body.articles[0].title).to.equal('Z');
         expect(res.body.articles[res.body.articles.length - 1].title).to.equal('A');
       }));
-    it('GET articles - handles multiple queries at once', () => request.get('/api/articles/?sort_by=article_id&author=rogersop&order=asc')
+    it('18-GET articles - handles multiple queries at once', () => request.get('/api/articles/?sort_by=article_id&author=rogersop&order=asc')
       .then((res) => {
         // console.log(res.body)
         expect(res.body.articles[0].article_id).to.equal(4);
         expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(10);
         expect(res.body.articles[0].author).to.equal('rogersop');
       }));
-    it('GET articles - handles queries of joined columns (sort_by=comment_count)', () => request.get('/api/articles/?sort_by=comment_count')
+    it('19-GET articles - handles queries of joined columns (sort_by=comment_count)', () => request.get('/api/articles/?sort_by=comment_count')
       .then((res) => {
         expect(res.body.articles[0].comment_count).to.equal('13');
         expect(res.body.articles[res.body.articles.length - 1].comment_count).to.equal('0');
       }));
-    xit('GET articles - handles queries of joined columns (comment_count=0)', () => request.get('/api/articles/?comment_count=13')
+    xit('20-GET articles - handles queries of joined columns (comment_count=0)', () => request.get('/api/articles/?comment_count=13')
       .then((res) => {
         expect(res.body.articles[0].comment_count).to.equal('13');
         expect(res.body.articles.length).to.equal(1);
       }));
 
-    it('POST article - status 201 - responds with the posted object', () => {
+    it('21-POST article - status 201 - responds with the posted object', () => {
       const input = {
         title: 'A title',
         body: 'A body',
@@ -175,13 +176,13 @@ describe('/api', () => {
         });
     });
 
-    it('GET articles by article_id - status 200 - content objects must contain correct keys including a comment count', () => request.get('/api/articles/5').expect(200)
+    it('22-GET articles by article_id - status 200 - content objects must contain correct keys including a comment count', () => request.get('/api/articles/5').expect(200)
       .then((res) => {
         expect(res.body.article[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
         expect(res.body.article[0].article_id).to.equal(5);
       }));
 
-    it('PATCH article by article_id - status 202 - responds with the updated article with 1 added vote', () => {
+    it('23-PATCH article by article_id - status 202 - responds with the updated article with 1 added vote', () => {
       const input = {
         inc_votes: 1,
       };
@@ -191,7 +192,7 @@ describe('/api', () => {
           expect(res.body.updatedArticle[0].votes).to.equal(101);
         });
     });
-    it('PATCH article by article_id - responds with the updated article with 50 minused votes', () => {
+    it('24-PATCH article by article_id - responds with the updated article with 50 minused votes', () => {
       const input = {
         inc_votes: -50,
       };
@@ -200,33 +201,33 @@ describe('/api', () => {
           expect(res.body.updatedArticle[0].votes).to.equal(50);
         });
     });
-    it('PATCH article by article_id - status 202 - responds with the correct keys', () => request.patch('/api/articles/5')
+    it('25-PATCH article by article_id - status 202 - responds with the correct keys', () => request.patch('/api/articles/5')
       .then((res) => {
         expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
       }));
 
-    it('DELETE article by article_id - status 204 - responds with 204', () => request.delete('/api/articles/5').expect(204));
+    it('26-DELETE article by article_id - status 204 - responds with 204', () => request.delete('/api/articles/5').expect(204));
 
 
-    it('GET comments by article_id - status 200 - content objects must contain correct keys including a comment count and must be an array', () => request.get('/api/articles/1/comments').expect(200)
+    it('27-GET comments by article_id - status 200 - content objects must contain correct keys including a comment count and must be an array', () => request.get('/api/articles/1/comments').expect(200)
       .then((res) => {
         expect(res.body.commentsByArticleId[0]).contains.keys('comment_id', 'votes', 'created_at', 'author', 'body');
         expect(res.body.commentsByArticleId).to.be.an('array');
       }));
 
-    it('GET comments by article_id - status 200 - contents must sort by any column', () => request.get('/api/articles/1/comments/?sort_by=votes').expect(200)
+    it('28-GET comments by article_id - status 200 - contents must sort by any column', () => request.get('/api/articles/1/comments/?sort_by=votes').expect(200)
       .then((res) => {
         expect(res.body.commentsByArticleId[0].votes).to.equal(100);
         expect(res.body.commentsByArticleId[1].votes).to.equal(16);
         expect(res.body.commentsByArticleId[2].votes).to.equal(14);
       }));
 
-    it('GET comments by article_id - status 200 - contents must sort by any column', () => request.get('/api/articles/1/comments/?sort_by=author&&order=asc')
+    it('29-GET comments by article_id - status 200 - contents must sort by any column', () => request.get('/api/articles/1/comments/?sort_by=author&&order=asc')
       .then((res) => {
         expect(res.body.commentsByArticleId[0].author).to.equal('butter_bridge');
         expect(res.body.commentsByArticleId[res.body.commentsByArticleId.length - 1].author).to.equal('icellusedkars');
       }));
-    it('POST comments - status 201 - responds with the posted object', () => {
+    it('30-POST comments - status 201 - responds with the posted object', () => {
       const input = {
         body: 'I actually do sell used cars',
         username: 'icellusedkars',
@@ -239,23 +240,23 @@ describe('/api', () => {
     });
 
     describe('error handling', () => {
-      it('GET - 400 -sort_by a column that doesnt exist', () => request.get('/api/articles?sort_by=chocolate')
+      it('31-GET - 400 -sort_by a column that doesnt exist', () => request.get('/api/articles?sort_by=chocolate')
         .expect(400)
         .then((res) => {
           expect(res.body.msg).to.eql('400 - bad request');
         }));
-      it('GET - 400 - sort order is something other than asc or desc', () => request.get('/api/articles?sort_by=author&&order=harold')
+      it('32-GET - 400 - sort order is something other than asc or desc', () => request.get('/api/articles?sort_by=author&&order=harold')
         .expect(400)
         .then((res) => {
           expect(res.body.msg).to.eql('400 - sort by order must be asc or desc.');
         }));
-      it('GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
+      it('33-GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
         .expect(404)
         .then((res) => {
           expect(res.body.msg).to.eql('404 - record not found');
         }));
 
-      it('GET - 200 -`author` / `topic` that exists but does not have any articles associated with it { articles: [] }', () => {
+      it('34-GET - 200 -`author` / `topic` that exists but does not have any articles associated with it { articles: [] }', () => {
         const input = {
           username: 'cyrilsneer',
           avatar_url: 'img',
@@ -266,12 +267,12 @@ describe('/api', () => {
             //console.log(res.body)
             return request.get('/api/articles?author=cyrilsneer').expect(200)
             .then((res) => {
-              console.log(res);
+              //console.log(res);
               expect(res.body.msg).to.eql({ articles: [] });
             })});
       });
 
-      it('POST 400 - No `title` / `body` / `topic` / `username` in request body', () => {
+      it('35-POST 400 - No `title` / `body` / `topic` / `username` in request body', () => {
         const input = {
           title: 'A title',
           body: 'A body',
@@ -280,11 +281,11 @@ describe('/api', () => {
         return request.post('/api/articles').send(input)
           .expect(400)
           .then((res) => {
-            expect(res.body.msg.slice(0, -33)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null');
+            expect(res.body.msg.substring(0,63)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null');
           });
       });
 
-      it('POST 400 - `topic` / `username` that doesnt exist: 400', () => {
+      it('36-POST 400 - `topic` / `username` that doesnt exist: 400', () => {
         const input = {
           title: 'A title',
           body: 'A body',
@@ -300,7 +301,7 @@ describe('/api', () => {
   });
 
   describe('/comments', () => {
-    it('PATCH comment by comment_id - status 202 - responds with the updated comment with 1 added vote', () => {
+    it('37-PATCH comment by comment_id - status 202 - responds with the updated comment with 1 added vote', () => {
       const input = {
         inc_votes: 1,
       };
@@ -310,7 +311,7 @@ describe('/api', () => {
           expect(res.body.updatedComment[0].votes).to.equal(15);
         });
     });
-    it('PATCH comment by comment_id - responds with the updated article with 50 minused votes', () => {
+    it('38-PATCH comment by comment_id - responds with the updated article with 50 minused votes', () => {
       const input = {
         inc_votes: -50,
       };
@@ -319,19 +320,19 @@ describe('/api', () => {
           expect(res.body.updatedComment[0].votes).to.equal(-150);
         });
     });
-    it('PATCH comment by comment_id - status 202 - responds with the correct keys', () => request.patch('/api/comments/4')
+    it('39-PATCH comment by comment_id - status 202 - responds with the correct keys', () => request.patch('/api/comments/4')
       .then((res) => {
         expect(res.body.updatedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
       }));
 
-    it('DELETE comment by comment_id - status 204 - responds with 204', () => request.delete('/api/comments/5').expect(204)
+    it('40-DELETE comment by comment_id - status 204 - responds with 204', () => request.delete('/api/comments/5').expect(204)
       .then(() => {
 
       }));
   });
 
   describe('/users', () => {
-    it('GET users - status:200 responds with an array of users', () => request.get('/api/users/').expect(200)
+    it('41-GET users - status:200 responds with an array of users', () => request.get('/api/users/').expect(200)
       .then((res) => {
         expect(res.body.users).to.be.an('array');
         expect(res.body.users[1]).to.eql({
@@ -341,12 +342,12 @@ describe('/api', () => {
         });
       }));
 
-    it('GET users - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/')
+    it('42-GET users - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/')
       .then((res) => {
         expect(res.body.users[0]).contains.keys('username', 'name', 'avatar_url');
       }));
 
-    it('GET users by username - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/icellusedkars').expect(200)
+    it('43-GET users by username - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/icellusedkars').expect(200)
       .then((res) => {
         const output = {
           user: [{
@@ -359,7 +360,7 @@ describe('/api', () => {
         expect(res.body).to.eql(output);
       }));
 
-    it('POST user - status 201 - responds with the posted object', () => {
+    it('44-POST user - status 201 - responds with the posted object', () => {
       const input = {
         username: 'cyrilsneer',
         avatar_url: 'img',
