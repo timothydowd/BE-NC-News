@@ -58,7 +58,7 @@ exports.sendArticles = (req, res, next) => {
   const conditions = {};
 
   //console.log(req.query)
-
+  
   if (req.query.sort_by){ 
     if(req.query.sort_by === 'comment_count') sortBy = 'comment_count'
     else sortBy = `articles.${req.query.sort_by}`;

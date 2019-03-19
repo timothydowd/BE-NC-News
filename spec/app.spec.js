@@ -6,9 +6,7 @@ const {
 const {
   app,
 } = require('../app');
-const {
-  connection,
-} = require('../connection');
+const {connection} = require('../connection');
 const request = require('supertest')(app);
 
 describe('/api', () => {
