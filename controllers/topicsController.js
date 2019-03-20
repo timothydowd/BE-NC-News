@@ -4,7 +4,7 @@ exports.sendTopics = (req, res, next) => {
   getTopics()
     .then((topics) => {
       res.status(200).send({ topics });
-    }).catch(console.log)
+    }).catch(console.log);
 };
 
 exports.sendAddedTopic = (req, res, next) => {

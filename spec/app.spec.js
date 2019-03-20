@@ -6,7 +6,7 @@ const {
 const {
   app,
 } = require('../app');
-const {connection} = require('../connection');
+const { connection } = require('../connection');
 const request = require('supertest')(app);
 
 describe('/api', () => {
@@ -120,7 +120,7 @@ describe('/api', () => {
       }));
     it('13-GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=author')
       .then((res) => {
-        //console.log(res.body)
+        // console.log(res.body)
         expect(res.body.articles[0].author).to.equal('rogersop');
         expect(res.body.articles[res.body.articles.length - 1].author).to.equal('butter_bridge');
       }));
@@ -253,7 +253,8 @@ describe('/api', () => {
       it('33-GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
         .expect(404)
         .then((res) => {
-          expect(res.body.msg).to.eql('404 - record not found');
+          console.log(res.body.msg);
+          expect(res.body.msg).to.eql('404 - The user margaret does not exist');
         }));
 
       it('34-GET - 200 -`author` / `topic` that exists but does not have any articles associated with it { articles: [] }', () => {
@@ -263,13 +264,11 @@ describe('/api', () => {
           name: 'cyril',
         };
         return request.post('/api/users').send(input).expect(201)
-          .then((res) => {
-            //console.log(res.body)
-            return request.get('/api/articles?author=cyrilsneer').expect(200)
+          .then(res => request.get('/api/articles?author=cyrilsneer').expect(200)
             .then((res) => {
-              //console.log(res);
-              expect(res.body.msg).to.eql({ articles: [] });
-            })});
+              // console.log(res);
+              expect(res.body).to.eql({ articles: [] });
+            }));
       });
 
       it('35-POST 400 - No `title` / `body` / `topic` / `username` in request body', () => {
@@ -281,7 +280,7 @@ describe('/api', () => {
         return request.post('/api/articles').send(input)
           .expect(400)
           .then((res) => {
-            expect(res.body.msg.substring(0,63)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null');
+            expect(res.body.msg.substring(0, 63)).to.equal('400 - Failing row contains (13, A title, A body, 0, mitch, null');
           });
       });
 

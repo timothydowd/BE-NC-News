@@ -2,46 +2,48 @@
 const {
   getArticles, addArticle, updateVotes, deleteArticle, getComments, addComment,
 } = require('../models/articlesModel');
-const { getUsers } = require('../models/usersModel')
-const { getTopics } = require('../models/topicsModel')
 
+const { checkUserOrTopicExists } = require('../utils/checkUserOrTopicExists');
 
 
 exports.sendArticles = (req, res, next) => {
-
-  const conditions = {}
+  const conditions = {};
   let {
     sort_by,
-    order
-  } = req.query
+    order,
+    author,
+    topic,
+  } = req.query;
 
-  
-  //const author = {username: req.query}
 
-  if (sort_by !== 'comment_count' && sort_by !== undefined) sort_by = `articles.${req.query.sort_by}`
+  if (author) username = { username: author };
+  if (topic) slug = { topic };
+
+  if (sort_by !== 'comment_count' && sort_by !== undefined) sort_by = `articles.${req.query.sort_by}`;
   if (order !== 'asc' && order !== 'desc' && order !== undefined) next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
-  
+
   for (key in req.query) {
     if (key !== 'sort_by' && key !== 'order') {
       conditions[`articles.${key}`] = req.query[key]; // all this formats the res.query  so it can be accepted by get articles
     }
   }
 
-  console.log(req.query)
-    
-  console.log(conditions)
-    //console.log(author, topic)
-   /* 
 
-    return Promise.all([getArticles(sort_by, order, conditions), getUsers({username: author}), getTopics(topic)])
-    .then(([articles, users, topics]) => {
-      console.log('articles: ',articles)
-      console.log('users: ',users)
-      console.log('topics: ',topics)
+  return Promise.all([getArticles(sort_by, order, conditions), checkUserOrTopicExists(req)])
+    .then(([articles, userOrTopicExists]) => {
+      console.log(userOrTopicExists);
+      // if(articles.length === 0) next({ code: 'notFound', detail: 'record not found' })
+      if (articles.length !== 0) res.status(200).send({ articles });
+      if (articles.length === 0 && userOrTopicExists === true) res.status(200).send({ articles });
+      else {
+        // console.log(userOrTopicExists);
+        next(userOrTopicExists.notFoundMsg);
+      }
     })
-    */
-
-  
+    .catch((err) => {
+      next(err);
+    });
+/*
   getArticles(sort_by, order, conditions)
     .then((articles) => {
       if (articles.length === 0) next({ code: 'notFound', detail: 'record not found' });
@@ -50,10 +52,8 @@ exports.sendArticles = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
-  
+  */
 };
-
-
 
 
 exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a sort query

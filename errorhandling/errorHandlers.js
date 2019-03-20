@@ -28,6 +28,8 @@ exports.handle422 = (err, req, res, next) => {
 
 exports.handle404 = (err, req, res, next) => {
   const codes = {
+    topicNotFound: `404 - ${err.detail}`,
+    userNotFound: `404 - ${err.detail}`,
     notFound: `404 - ${err.detail}`,
   };
   if (codes[err.code]) {
