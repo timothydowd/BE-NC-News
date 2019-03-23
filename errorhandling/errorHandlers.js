@@ -6,6 +6,7 @@ exports.unrecognizedRoute = (req, res, next) => {
 
 exports.handle400 = (err, req, res, next) => {
   const codes = {
+    '22P02': '400 - Invalid article_id',
     23502: `400 - ${err.detail || 'bad request'}`, // missing parameters in req body for post
     42703: `400 - ${err.detail || 'bad request'}`, // non exisiting colum in sort_by param in get articles
     orderErr: `400 - ${err.detail || 'bad request'}`,
@@ -19,7 +20,7 @@ exports.handle400 = (err, req, res, next) => {
 
 exports.handle422 = (err, req, res, next) => {
   const codes = {
-    23505: `422 - ${err.detail}`, // slug already exists in topic field
+    23505: `422 - ${err.detail || 'Unprocessable Entity'}`, // slug already exists in topic field
   };
   if (codes[err.code]) {
     res.status(422).send({ msg: codes[err.code] });

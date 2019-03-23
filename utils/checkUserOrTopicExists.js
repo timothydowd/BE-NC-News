@@ -7,7 +7,7 @@ exports.checkUserOrTopicExists = (req, res, next) => {
     return connection('topics').select('*').where(slug)
       .then((topic) => {
         if (topic.length === 0) {
-          return { notFoundMsg: { code: topicNotFound, detail: `${slug.slug} does not exist as a topic` } };
+          return { notFoundMsg: { code: 'topicNotFound', detail: `${slug.slug} does not exist as a topic` } };
         }
         return true;
       });

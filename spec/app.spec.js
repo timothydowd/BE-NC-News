@@ -296,6 +296,11 @@ describe('/api', () => {
             expect(res.body.msg).to.equal('400 - Key (topic)=(notatopic) is not present in table "topics".');
           });
       });
+
+      it('36a- GET 400- Bad `article_id` (e.g. `/dog`)', () => request.get('/api/articles/dog').expect(400)
+        .then((res) => {
+          expect(res.body.msg).to.equal('400 - Invalid article_id');
+        }));
     });
   });
 

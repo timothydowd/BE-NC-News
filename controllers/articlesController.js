@@ -36,7 +36,6 @@ exports.sendArticles = (req, res, next) => {
       if (articles.length !== 0) res.status(200).send({ articles });
       if (articles.length === 0 && userOrTopicExists === true) res.status(200).send({ articles });
       else {
-        // console.log(userOrTopicExists);
         next(userOrTopicExists.notFoundMsg);
       }
     })
@@ -66,6 +65,9 @@ exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a 
     .then((article) => {
       if (article.length === 0) next({ code: 404, detail: 'Article not found' });
       else res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
