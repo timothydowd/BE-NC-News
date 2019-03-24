@@ -317,7 +317,15 @@ describe('/api', () => {
         const input = {};
         return request.patch('/api/articles/1').send(input).expect(400)
           .then((res) => {
-            expect(res.body.msg).to.equal('400 - Number of votes not specified');
+            expect(res.body.msg).to.equal('400 - Number of votes not specified or is invalid');
+          });
+      });
+
+      it('36d-PATCH - Invalid `inc_votes` (e.g. `{ inc_votes : "cat" }`)', () => {
+        const input = { inc_votes: 'cat' };
+        return request.patch('/api/articles/1').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Number of votes not specified or is invalid');
           });
       });
     });
