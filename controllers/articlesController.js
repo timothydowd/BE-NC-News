@@ -125,18 +125,23 @@ exports.sendStatusDeleted = (req, res, next) => {
 
 
 exports.sendCommentsByArticleId = (req, res, next) => {
-  const articleId = req.params;
-  let sortBy;
-  let order;
+  const { sort_by, order } = req.query;
+  const conditions = {};
+  conditions[`articles.${Object.keys(req.params)[0]}`] = req.params.article_id;
 
-  for (const key in req.query) {
-    if (key === 'sort_by') sortBy = req.query[key];
-    if (key === 'order') order = req.query[key];
-  }
-
-  getComments(articleId, sortBy, order)
-    .then((commentsByArticleId) => {
-      res.status(200).send({ commentsByArticleId });
+  getArticles(sort_by, order, conditions)
+    .then((article) => {
+      if (article.length === 0) next({ code: 'articleIdNotFound', detail: 'article_id does not exist' });
+      else {
+        const articleId = req.params;
+        getComments(articleId, sort_by, order)
+          .then((commentsByArticleId) => {
+            res.status(200).send({ commentsByArticleId });
+          });
+      }
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 

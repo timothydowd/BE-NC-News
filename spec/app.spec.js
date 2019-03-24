@@ -342,9 +342,14 @@ describe('/api', () => {
           expect(res.body.msg).to.equal('404 - article_id does not exist');
         }));
 
-      it.only('36g - DELETE - bad article id', () => request.delete('/api/articles/cat').expect(400)
+      it('36g - DELETE - bad article id', () => request.delete('/api/articles/cat').expect(400)
         .then((res) => {
           expect(res.body.msg).to.equal('400 - Invalid article_id');
+        }));
+
+      it('36h - article id that doesn\'t exist in the database', () => request.get('/api/articles/9999/comments').expect(404)
+        .then((res) => {
+          expect(res.body.msg).to.equal('404 - article_id does not exist');
         }));
     });
   });
@@ -378,6 +383,12 @@ describe('/api', () => {
       .then(() => {
 
       }));
+
+    describe('error handling', () => {
+      it('', () => {
+
+      });
+    });
   });
 
   describe('/users', () => {
