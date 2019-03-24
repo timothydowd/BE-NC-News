@@ -341,6 +341,11 @@ describe('/api', () => {
         .then((res) => {
           expect(res.body.msg).to.equal('404 - article_id does not exist');
         }));
+
+      it.only('36g - DELETE - bad article id', () => request.delete('/api/articles/cat').expect(400)
+        .then((res) => {
+          expect(res.body.msg).to.equal('400 - Invalid article_id');
+        }));
     });
   });
 
