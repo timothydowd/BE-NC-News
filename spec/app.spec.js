@@ -120,7 +120,6 @@ describe('/api', () => {
       }));
     it('13-GET articles - sorts the articles by any valid column (defaults to date)', () => request.get('/api/articles/?sort_by=author')
       .then((res) => {
-        // console.log(res.body)
         expect(res.body.articles[0].author).to.equal('rogersop');
         expect(res.body.articles[res.body.articles.length - 1].author).to.equal('butter_bridge');
       }));
@@ -146,7 +145,6 @@ describe('/api', () => {
       }));
     it('18-GET articles - handles multiple queries at once', () => request.get('/api/articles/?sort_by=article_id&author=rogersop&order=asc')
       .then((res) => {
-        // console.log(res.body)
         expect(res.body.articles[0].article_id).to.equal(4);
         expect(res.body.articles[res.body.articles.length - 1].article_id).to.equal(10);
         expect(res.body.articles[0].author).to.equal('rogersop');
@@ -253,7 +251,6 @@ describe('/api', () => {
       it('33-GET - 404 - author/ topic is not in the database', () => request.get('/api/articles?author=margaret')
         .expect(404)
         .then((res) => {
-          console.log(res.body.msg);
           expect(res.body.msg).to.eql('404 - The user margaret does not exist');
         }));
 
@@ -266,7 +263,6 @@ describe('/api', () => {
         return request.post('/api/users').send(input).expect(201)
           .then(res => request.get('/api/articles?author=cyrilsneer').expect(200)
             .then((res) => {
-              // console.log(res);
               expect(res.body).to.eql({ articles: [] });
             }));
       });
@@ -300,6 +296,11 @@ describe('/api', () => {
       it('36a- GET 400- Bad `article_id` (e.g. `/dog`)', () => request.get('/api/articles/dog').expect(400)
         .then((res) => {
           expect(res.body.msg).to.equal('400 - Invalid article_id');
+        }));
+
+      it('36b- GET 400- Well formed `article_id` that doesn\'t exist in the database ', () => request.get('/api/articles/9999').expect(404)
+        .then((res) => {
+          expect(res.body.msg).to.equal('404 - article_id does not exist');
         }));
     });
   });

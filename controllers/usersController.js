@@ -18,7 +18,6 @@ exports.sendAddedUser = (req, res, next) => {
 
 exports.sendUserByUserName = (req, res, next) => {
   const userName = req.params;
-  console.log('users controller: ', userName);
   getUsers(userName)
     .then((user) => {
       res.status(200).send({ user });

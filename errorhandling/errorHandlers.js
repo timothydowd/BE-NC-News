@@ -29,6 +29,7 @@ exports.handle422 = (err, req, res, next) => {
 
 exports.handle404 = (err, req, res, next) => {
   const codes = {
+    articleIdNotFound: `404 - ${err.detail}`,
     topicNotFound: `404 - ${err.detail}`,
     userNotFound: `404 - ${err.detail}`,
     notFound: `404 - ${err.detail}`,

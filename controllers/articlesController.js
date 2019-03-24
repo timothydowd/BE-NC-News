@@ -31,7 +31,6 @@ exports.sendArticles = (req, res, next) => {
 
   return Promise.all([getArticles(sort_by, order, conditions), checkUserOrTopicExists(req)])
     .then(([articles, userOrTopicExists]) => {
-      console.log(userOrTopicExists);
       // if(articles.length === 0) next({ code: 'notFound', detail: 'record not found' })
       if (articles.length !== 0) res.status(200).send({ articles });
       if (articles.length === 0 && userOrTopicExists === true) res.status(200).send({ articles });
@@ -61,9 +60,10 @@ exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a 
   const conditions = {};
   conditions[`articles.${Object.keys(req.params)[0]}`] = req.params.article_id;
 
+
   getArticles(sortBy, order, conditions)
     .then((article) => {
-      if (article.length === 0) next({ code: 404, detail: 'Article not found' });
+      if (article.length === 0) next({ code: 'articleIdNotFound', detail: 'article_id does not exist' });
       else res.status(200).send({ article });
     })
     .catch((err) => {
