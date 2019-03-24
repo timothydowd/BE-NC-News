@@ -104,9 +104,23 @@ exports.sendVoteUpdatedArticle = (req, res, next) => {
 };
 
 exports.sendStatusDeleted = (req, res, next) => {
-  const articleId = req.params;
-  deleteArticle(articleId)
-    .then(() => res.sendStatus(204));
+  let sortBy;
+  let order;
+  const conditions = {};
+  conditions[`articles.${Object.keys(req.params)[0]}`] = req.params.article_id;
+
+  getArticles(sortBy, order, conditions)
+    .then((article) => {
+      if (article.length === 0) next({ code: 'articleIdNotFound', detail: 'article_id does not exist' });
+      else {
+        const articleId = req.params;
+        deleteArticle(articleId)
+          .then(() => res.sendStatus(204));
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 
