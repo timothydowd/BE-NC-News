@@ -90,10 +90,13 @@ exports.sendVoteUpdatedArticle = (req, res, next) => {
   const newVote = req.body.inc_votes;
   const articleId = req.params;
 
-  updateVotes(articleId, newVote)
-    .then((updatedArticle) => {
-      res.status(202).send({ updatedArticle });
-    });
+  if (!newVote) next({ code: 'incVoteMissing', detail: 'Number of votes not specified' });
+  else {
+    updateVotes(articleId, newVote)
+      .then((updatedArticle) => {
+        res.status(202).send({ updatedArticle });
+      });
+  }
 };
 
 exports.sendStatusDeleted = (req, res, next) => {

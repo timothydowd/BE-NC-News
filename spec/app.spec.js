@@ -6,7 +6,9 @@ const {
 const {
   app,
 } = require('../app');
-const { connection } = require('../connection');
+const {
+  connection,
+} = require('../connection');
 const request = require('supertest')(app);
 
 describe('/api', () => {
@@ -199,10 +201,16 @@ describe('/api', () => {
           expect(res.body.updatedArticle[0].votes).to.equal(50);
         });
     });
-    it('25-PATCH article by article_id - status 202 - responds with the correct keys', () => request.patch('/api/articles/5')
-      .then((res) => {
-        expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
-      }));
+    it('25-PATCH article by article_id - status 202 - responds with the correct keys', () => {
+      const input = {
+        inc_votes: 1,
+      };
+      return request.patch('/api/articles/5').send(input)
+        .then((res) => {
+          console.log(res.body.msg);
+          expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
+        });
+    });
 
     it('26-DELETE article by article_id - status 204 - responds with 204', () => request.delete('/api/articles/5').expect(204));
 
@@ -263,7 +271,9 @@ describe('/api', () => {
         return request.post('/api/users').send(input).expect(201)
           .then(res => request.get('/api/articles?author=cyrilsneer').expect(200)
             .then((res) => {
-              expect(res.body).to.eql({ articles: [] });
+              expect(res.body).to.eql({
+                articles: [],
+              });
             }));
       });
 
@@ -302,6 +312,14 @@ describe('/api', () => {
         .then((res) => {
           expect(res.body.msg).to.equal('404 - article_id does not exist');
         }));
+
+      it('36c-PATCH article by article_id - No inc_votes on request body', () => {
+        const input = {};
+        return request.patch('/api/articles/1').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Number of votes not specified');
+          });
+      });
     });
   });
 

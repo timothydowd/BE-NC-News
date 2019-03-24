@@ -4,7 +4,7 @@ exports.up = function (knex, Promise) {
     articlesTable.increments('article_id').primary();
     articlesTable.string('title').notNullable();
     articlesTable.string('body', 2000).notNullable();
-    articlesTable.integer('votes').defaultTo(0);
+    articlesTable.integer('votes').defaultTo(0).notNullable();
     articlesTable.string('topic').references('slug').inTable('topics').notNullable();
     articlesTable.string('author').references('username').inTable('users').notNullable();
     articlesTable.timestamp('created_at').defaultTo(knex.fn.now());
