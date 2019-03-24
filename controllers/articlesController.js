@@ -90,8 +90,9 @@ exports.sendVoteUpdatedArticle = (req, res, next) => {
   const newVote = req.body.inc_votes;
   const articleId = req.params;
 
-  if (!newVote || !Number.isInteger(newVote)) next({ code: 'incVoteMissingOrInvalid', detail: 'Number of votes not specified or is invalid' });
-  else {
+  if (!newVote || !Number.isInteger(newVote) || Object.keys(req.body).length !== 1) {
+    next({ code: 'incVoteInvalid', detail: 'Number of votes not specified / invalid entry type / invalid entry field' });
+  } else {
     updateVotes(articleId, newVote)
       .then((updatedArticle) => {
         res.status(202).send({ updatedArticle });

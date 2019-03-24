@@ -317,7 +317,7 @@ describe('/api', () => {
         const input = {};
         return request.patch('/api/articles/1').send(input).expect(400)
           .then((res) => {
-            expect(res.body.msg).to.equal('400 - Number of votes not specified or is invalid');
+            expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
           });
       });
 
@@ -325,7 +325,15 @@ describe('/api', () => {
         const input = { inc_votes: 'cat' };
         return request.patch('/api/articles/1').send(input).expect(400)
           .then((res) => {
-            expect(res.body.msg).to.equal('400 - Number of votes not specified or is invalid');
+            expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
+          });
+      });
+
+      it('36e-PATCH - Some other property on request body (e.g. `{ inc_votes : 1, name: "Mitch" }', () => {
+        const input = { inc_votes: 1, name: 'Mitch' };
+        return request.patch('/api/articles/1').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
           });
       });
     });
