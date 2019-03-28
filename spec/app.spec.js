@@ -367,7 +367,7 @@ describe('/api', () => {
           expect(res.body.msg).to.equal('400 - Invalid article_id');
         }));
 
-      it.only('36k - POST - post comments by article id - Some incorrect property In request body (e.g. `{ username: "icellusedkars", name: "Mitch" }', () => {
+      it('36k - POST - post comments by article id - Some incorrect property In request body (e.g. `{ username: "icellusedkars", name: "Mitch" }', () => {
         const input = {
           name: 'Mitch',
           username: 'icellusedkars',
@@ -376,6 +376,39 @@ describe('/api', () => {
           .then((res) => {
             console.log(res.error);
             expect(res.body.msg).to.equal('400 - bad request');
+          });
+      });
+
+      it('36l - POST - post comments for a username that does not exist', () => {
+        const input = {
+          body: 'yada yada yada',
+          username: 'terrytibbs',
+        };
+        return request.post('/api/articles/1/comments').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Key (author)=(terrytibbs) is not present in table "users".');
+          });
+      });
+
+      it('36m - POST - post comments using an article id that does not exist', () => {
+        const input = {
+          body: 'yada yada yada',
+          username: 'icellusedkars',
+        };
+        return request.post('/api/articles/576839/comments').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Key (article_id)=(576839) is not present in table "articles".');
+          });
+      });
+
+      it('36n - POST - post comments using an article id that is invalid', () => {
+        const input = {
+          body: 'yada yada yada',
+          username: 'icellusedkars',
+        };
+        return request.post('/api/articles/hi/comments').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Invalid article_id');
           });
       });
     });
