@@ -9,6 +9,7 @@ exports.sendUsers = (req, res, next) => {
 
 
 exports.sendAddedUser = (req, res, next) => {
+  console.log(req.body);
   const userBody = req.body;
   addUser(userBody)
     .then((addedUser) => {

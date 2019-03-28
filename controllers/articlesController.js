@@ -154,6 +154,10 @@ exports.sendAddedComment = (req, res, next) => {
 
   addComment(authoredBody)
     .then((addedComment) => {
+      console.log(addedComment);
       res.status(201).send({ addedComment });
+    })
+    .catch((err) => {
+      next(err);
     });
 };

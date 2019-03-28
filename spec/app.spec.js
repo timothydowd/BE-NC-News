@@ -322,7 +322,9 @@ describe('/api', () => {
       });
 
       it('36d-PATCH - Invalid `inc_votes` (e.g. `{ inc_votes : "cat" }`)', () => {
-        const input = { inc_votes: 'cat' };
+        const input = {
+          inc_votes: 'cat',
+        };
         return request.patch('/api/articles/1').send(input).expect(400)
           .then((res) => {
             expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
@@ -330,7 +332,10 @@ describe('/api', () => {
       });
 
       it('36e - PATCH - Some other property on request body (e.g. `{ inc_votes : 1, name: "Mitch" }', () => {
-        const input = { inc_votes: 1, name: 'Mitch' };
+        const input = {
+          inc_votes: 1,
+          name: 'Mitch',
+        };
         return request.patch('/api/articles/1').send(input).expect(400)
           .then((res) => {
             expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
@@ -347,10 +352,32 @@ describe('/api', () => {
           expect(res.body.msg).to.equal('400 - Invalid article_id');
         }));
 
-      it('36h - article id that doesn\'t exist in the database', () => request.get('/api/articles/9999/comments').expect(404)
+      it('36h - GET - get comments for article id that doesn\'t exist in the database', () => request.get('/api/articles/9999/comments').expect(404)
         .then((res) => {
           expect(res.body.msg).to.equal('404 - article_id does not exist');
         }));
+      it('36i - GET - article id exists but no associated comments', () => request.get('/api/articles/2/comments').expect(200)
+        .then((res) => {
+          expect(res.body).to.eql({
+            commentsByArticleId: [],
+          });
+        }));
+      it('36j- GET 400-  get comments for bad `article_id` (e.g. `/dog`)', () => request.get('/api/articles/dog/comments').expect(400)
+        .then((res) => {
+          expect(res.body.msg).to.equal('400 - Invalid article_id');
+        }));
+
+      it.only('36k - POST - post comments by article id - Some incorrect property In request body (e.g. `{ username: "icellusedkars", name: "Mitch" }', () => {
+        const input = {
+          name: 'Mitch',
+          username: 'icellusedkars',
+        };
+        return request.post('/api/articles/1/comments').send(input).expect(400)
+          .then((res) => {
+            console.log(res.error);
+            expect(res.body.msg).to.equal('400 - bad request');
+          });
+      });
     });
   });
 
