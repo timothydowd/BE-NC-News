@@ -305,7 +305,7 @@ describe('/api', () => {
 
       it('36a- GET 400- Bad `article_id` (e.g. `/dog`)', () => request.get('/api/articles/dog').expect(400)
         .then((res) => {
-          expect(res.body.msg).to.equal('400 - Invalid article_id');
+          expect(res.body.msg).to.equal('400 - Invalid article_id/comment_id');
         }));
 
       it('36b- GET 400- Well formed `article_id` that doesn\'t exist in the database ', () => request.get('/api/articles/9999').expect(404)
@@ -349,7 +349,7 @@ describe('/api', () => {
 
       it('36g - DELETE - bad article id', () => request.delete('/api/articles/cat').expect(400)
         .then((res) => {
-          expect(res.body.msg).to.equal('400 - Invalid article_id');
+          expect(res.body.msg).to.equal('400 - Invalid article_id/comment_id');
         }));
 
       it('36h - GET - get comments for article id that doesn\'t exist in the database', () => request.get('/api/articles/9999/comments').expect(404)
@@ -364,7 +364,7 @@ describe('/api', () => {
         }));
       it('36j- GET 400-  get comments for bad `article_id` (e.g. `/dog`)', () => request.get('/api/articles/dog/comments').expect(400)
         .then((res) => {
-          expect(res.body.msg).to.equal('400 - Invalid article_id');
+          expect(res.body.msg).to.equal('400 - Invalid article_id/comment_id');
         }));
 
       it('36k - POST - post comments by article id - Some incorrect property In request body (e.g. `{ username: "icellusedkars", name: "Mitch" }', () => {
@@ -408,7 +408,7 @@ describe('/api', () => {
         };
         return request.post('/api/articles/hi/comments').send(input).expect(400)
           .then((res) => {
-            expect(res.body.msg).to.equal('400 - Invalid article_id');
+            expect(res.body.msg).to.equal('400 - Invalid article_id/comment_id');
           });
       });
     });
@@ -467,6 +467,27 @@ describe('/api', () => {
             expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
           });
       });
+
+      it('40c - PATCH comment by comment_id- Invalid property in req.body', () => {
+        const input = {
+          inc_votes: 2,
+          vegetable: 'turnip',
+        };
+        return request.patch('/api/comments/1').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
+          });
+      });
+
+      it('40d 400 - DELETE comment by comment_id that does not exist', () => request.delete('/api/comments/9999').expect(404)
+        .then((res) => {
+          expect(res.body.msg).to.equal('404 - comment_id does not exist');
+        }));
+
+      it('40e 400 - DELETE comment by invalid comment_id', () => request.delete('/api/comments/cat').expect(400)
+        .then((res) => {
+          expect(res.body.msg).to.equal('400 - Invalid article_id/comment_id');
+        }));
     });
   });
 

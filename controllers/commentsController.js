@@ -1,6 +1,7 @@
 const {
   updateCommentVotes,
   deleteComment,
+  getCommentbyId,
 } = require('../models/commentsModel');
 
 
@@ -24,6 +25,18 @@ exports.sendVoteUpdatedComment = (req, res, next) => {
 
 exports.sendStatusDeletedComment = (req, res, next) => {
   const commentId = req.params;
-  deleteComment(commentId)
-    .then(() => res.sendStatus(204));
+  getCommentbyId(commentId)
+    .then((comment) => {
+      if (comment.length === 0) {
+        console.log('in if');
+        next({ code: 'commentIdNotFound', detail: 'comment_id does not exist' });
+      } else {
+        console.log('in else');
+        deleteComment(commentId)
+          .then(() => res.sendStatus(204));
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

@@ -9,3 +9,8 @@ exports.updateCommentVotes = (commentId, newVote) => connection('comments')
 exports.deleteComment = commentId => connection('comments')
   .where(commentId)
   .del();
+
+
+exports.getCommentbyId = commentId => connection('comments')
+  .select('*')
+  .where(commentId);
