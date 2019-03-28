@@ -8,10 +8,17 @@ exports.sendVoteUpdatedComment = (req, res, next) => {
   const newVote = req.body.inc_votes;
   const commentId = req.params;
 
-  updateCommentVotes(commentId, newVote)
-    .then((updatedComment) => {
-      res.status(202).send({ updatedComment });
-    });
+
+  if (!newVote || !Number.isInteger(newVote) || Object.keys(req.body).length !== 1) next({ code: 'incVoteInvalid', detail: 'Number of votes not specified / invalid entry type / invalid entry field' });
+  else {
+    updateCommentVotes(commentId, newVote)
+      .then((updatedComment) => {
+        res.status(202).send({ updatedComment });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  }
 };
 
 

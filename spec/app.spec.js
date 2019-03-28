@@ -434,10 +434,15 @@ describe('/api', () => {
           expect(res.body.updatedComment[0].votes).to.equal(-150);
         });
     });
-    it('39-PATCH comment by comment_id - status 202 - responds with the correct keys', () => request.patch('/api/comments/4')
-      .then((res) => {
-        expect(res.body.updatedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
-      }));
+    it('39-PATCH comment by comment_id - status 202 - responds with the correct keys', () => {
+      const input = {
+        inc_votes: 1,
+      };
+      return request.patch('/api/comments/4').send(input)
+        .then((res) => {
+          expect(res.body.updatedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
+        });
+    });
 
     it('40-DELETE comment by comment_id - status 204 - responds with 204', () => request.delete('/api/comments/5').expect(204)
       .then(() => {
@@ -445,8 +450,22 @@ describe('/api', () => {
       }));
 
     describe('error handling', () => {
-      it('', () => {
+      it('40a-PATCH comment by comment_id - No inc_votes on request body', () => {
+        const input = {};
+        return request.patch('/api/comments/1').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
+          });
+      });
 
+      it('40b - PATCH comment by comment_id- Invalid `inc_votes` (e.g. `{ inc_votes : "cat" }`)', () => {
+        const input = {
+          inc_votes: 'cat',
+        };
+        return request.patch('/api/comments/1').send(input).expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal('400 - Number of votes not specified / invalid entry type / invalid entry field');
+          });
       });
     });
   });
