@@ -9,11 +9,13 @@ exports.sendUsers = (req, res, next) => {
 
 
 exports.sendAddedUser = (req, res, next) => {
-  console.log(req.body);
   const userBody = req.body;
   addUser(userBody)
     .then((addedUser) => {
       res.status(201).send({ addedUser });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -21,6 +23,7 @@ exports.sendUserByUserName = (req, res, next) => {
   const userName = req.params;
   getUsers(userName)
     .then((user) => {
-      res.status(200).send({ user });
+      if (user.length === 0) next({ code: 'userNotFound', detail: 'username does not exist' });
+      else res.status(200).send({ user });
     });
 };

@@ -542,5 +542,40 @@ describe('/api', () => {
           expect(res.body).to.eql(output);
         });
     });
+
+    describe('error handling', () => {
+      it('GET 400 - username does not exist', () => request.get('/api/users/terrytibbs').expect(404)
+        .then((res) => {
+          console.log(res.body);
+          expect(res.body.msg).to.equal('404 - username does not exist');
+        }));
+
+      it('POST 400 - no username/name in request body', () => {
+        const input = {
+          car: 'toyota',
+          avatar_url: 'img',
+          age: 23,
+        };
+        return request.post('/api/users/').send(input)
+          .expect(400)
+          .then((res) => {
+            console.log(res.error);
+            expect(res.body.msg).to.equal('400 - bad request');
+          });
+      });
+
+      it('POST 422 - username already exists when creating new user', () => {
+        const input = {
+          username: 'icellusedkars',
+          avatar_url: 'img',
+          name: 'bob',
+        };
+        return request.post('/api/users/').send(input)
+          .expect(422)
+          .then((res) => {
+            expect(res.body.msg).to.equal('422 - Key (username)=(icellusedkars) already exists.');
+          });
+      });
+    });
   });
 });
