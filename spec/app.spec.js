@@ -8,7 +8,7 @@ const {
 } = require('../app');
 const {
   connection,
-} = require('../connection');
+} = require('../db/connection');
 const request = require('supertest')(app);
 
 describe('/api', () => {

@@ -25,7 +25,6 @@ exports.sendArticles = (req, res, next) => {
   }
 };
 
-
 exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a sort query
   let sortBy;
   let order;

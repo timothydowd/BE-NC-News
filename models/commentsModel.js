@@ -1,4 +1,4 @@
-const { connection } = require('../connection');
+const { connection } = require('../db/connection');
 
 exports.updateCommentVotes = (commentId, newVote) => connection('comments')
   .where(commentId)

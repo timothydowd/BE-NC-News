@@ -1,4 +1,4 @@
-const { connection } = require('../connection');
+const { connection } = require('../db/connection');
 
 
 exports.getArticles = (sortBy = 'articles.created_at', orderBy = 'desc', conditions = {}) => connection
