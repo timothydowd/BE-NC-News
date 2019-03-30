@@ -45,9 +45,13 @@ exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a 
 
 
 exports.sendAddedArticle = (req, res, next) => {
-  const authoredBody = req.body;
-  authoredBody.author = authoredBody.username;
-  delete authoredBody.username;
+  const authoredBody = {
+    title: req.body.title,
+    body: req.body.body,
+    topic: req.body.topic,
+    author: req.body.username,
+  };
+
   addArticle(authoredBody)
     .then((addedArticle) => {
       res.status(201).send({ addedArticle });
