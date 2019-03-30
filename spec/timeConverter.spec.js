@@ -1,11 +1,11 @@
-const { timeConverter } = require('../utils/timeConverter');
+const { convertTime } = require('../utils/timeConverter');
 const { expect } = require('chai');
 
 
-describe('timeConverter', () => {
+describe('convertTime', () => {
   it('converts an array containing unix timestamp into knex acceptable date format', () => {
     const input = [{ created_at: 1289996514171 }];
     const expected = [{ created_at: new Date('2010-11-17T12:21:54.171Z') }];
-    expect(timeConverter(input)).to.eql(expected);
+    expect(convertTime(input)).to.eql(expected);
   });
 });

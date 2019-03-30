@@ -1,9 +1,9 @@
 const {
   userData, topicData, articleData, commentData,
 } = require('../data/test-data/index');
-const { timeConverter } = require('../../utils/timeConverter');
+const { convertTime } = require('../../utils/timeConverter');
 
-const { commentsFormatter } = require('../../utils/dataFormatters');
+const { formatComments } = require('../../utils/dataFormatters');
 
 exports.seed = function (knex, Promise) {
   return knex.migrate
@@ -16,7 +16,7 @@ exports.seed = function (knex, Promise) {
       .insert(topicData)
       .returning('*'))
     .then(() => {
-      const timeFormatArticleData = timeConverter(articleData);
+      const timeFormatArticleData = convertTime(articleData);
       return knex('articles')
         .insert(timeFormatArticleData)
         .returning('*');
@@ -26,7 +26,7 @@ exports.seed = function (knex, Promise) {
     .then((articles) => {
       /*
         const articleIdTitleRef = createRef(articles, 'title', 'article_id')
-        const timeFormatCommentData = timeConverter(commentData)
+        const timeFormatCommentData = convertTime(commentData)
 
         const commentDataWithArticleId = timeFormatCommentData.map(row => {
           const newCommentRecord = {
@@ -41,7 +41,7 @@ exports.seed = function (knex, Promise) {
         })
         */
 
-      const commentDataWithArticleId = commentsFormatter(articles, commentData);
+      const commentDataWithArticleId = formatComments(articles, commentData);
 
       return knex('comments')
         .insert(commentDataWithArticleId)

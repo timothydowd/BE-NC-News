@@ -1,9 +1,9 @@
 const createRef = require('./createRef');
-const { timeConverter } = require('./timeConverter');
+const { convertTime } = require('./timeConverter');
 
-const commentsFormatter = (articles, commentData) => {
+const formatComments = (articles, commentData) => {
   const articleIdTitleRef = createRef(articles, 'title', 'article_id');
-  const timeFormatCommentData = timeConverter(commentData);
+  const timeFormatCommentData = convertTime(commentData);
 
   const commentDataWithArticleId = timeFormatCommentData.map((row) => {
     const newCommentRecord = {
@@ -20,4 +20,4 @@ const commentsFormatter = (articles, commentData) => {
   return commentDataWithArticleId;
 };
 
-module.exports = { commentsFormatter };
+module.exports = { formatComments };

@@ -1,8 +1,8 @@
-const { commentsFormatter } = require('../utils/dataFormatters');
+const { formatComments } = require('../utils/dataFormatters');
 const { expect } = require('chai');
 
 
-describe('commentsFormatter', () => {
+describe('formatComments', () => {
   it('takes an array containing an object and returns a new array with adjusted key names and time', () => {
     const input1 = [{
       article_id: 1,
@@ -32,6 +32,6 @@ describe('commentsFormatter', () => {
       body:
         'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
     }];
-    expect(commentsFormatter(input1, input2)).to.eql(expected);
+    expect(formatComments(input1, input2)).to.eql(expected);
   });
 });

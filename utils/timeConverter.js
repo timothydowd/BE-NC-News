@@ -1,5 +1,5 @@
 
-const timeConverter = array => array.map((row) => {
+const convertTime = array => array.map((row) => {
   const newObj = row;
   newObj.created_at = new Date(row.created_at);
 
@@ -7,4 +7,4 @@ const timeConverter = array => array.map((row) => {
 });
 
 
-module.exports = { timeConverter };
+module.exports = { convertTime };

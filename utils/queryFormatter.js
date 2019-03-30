@@ -1,5 +1,5 @@
 
-exports.queryFormatter = (req) => {
+exports.formatQuery = (req) => {
   const conditions = {};
   let {
     sort_by,
