@@ -1,5 +1,3 @@
-
-
 const convertTime = array => array.map((row) => {
   let newObj;
   const {

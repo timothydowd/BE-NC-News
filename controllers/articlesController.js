@@ -4,53 +4,25 @@ const {
 } = require('../models/articlesModel');
 
 const { checkUserOrTopicExists } = require('../utils/checkUserOrTopicExists');
-
+const { formatQuery } = require('../utils/queryFormatter');
 
 exports.sendArticles = (req, res, next) => {
-  const conditions = {};
-  let {
-    sort_by,
-    order,
-    author,
-    topic,
-  } = req.query;
-
-
-  if (author) username = { username: author };
-  if (topic) slug = { topic };
-
-  if (sort_by !== 'comment_count' && sort_by !== undefined) sort_by = `articles.${req.query.sort_by}`;
-  if (order !== 'asc' && order !== 'desc' && order !== undefined) next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
-
-  for (key in req.query) {
-    if (key !== 'sort_by' && key !== 'order') {
-      conditions[`articles.${key}`] = req.query[key]; // all this formats the res.query  so it can be accepted by get articles
-    }
-  }
-
-
-  return Promise.all([getArticles(sort_by, order, conditions), checkUserOrTopicExists(req)])
-    .then(([articles, userOrTopicExists]) => {
+  const { sort_by, order, conditions } = formatQuery(req.query);
+  if (order === 'invalidInput') next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
+  else {
+    return Promise.all([getArticles(sort_by, order, conditions), checkUserOrTopicExists(req)])
+      .then(([articles, userOrTopicExists]) => {
       // if(articles.length === 0) next({ code: 'notFound', detail: 'record not found' })
-      if (articles.length !== 0) res.status(200).send({ articles });
-      if (articles.length === 0 && userOrTopicExists === true) res.status(200).send({ articles });
-      else {
-        next(userOrTopicExists.notFoundMsg);
-      }
-    })
-    .catch((err) => {
-      next(err);
-    });
-/*
-  getArticles(sort_by, order, conditions)
-    .then((articles) => {
-      if (articles.length === 0) next({ code: 'notFound', detail: 'record not found' });
-      res.status(200).send({ articles });
-    })
-    .catch((err) => {
-      next(err);
-    });
-  */
+        if (articles.length !== 0) res.status(200).send({ articles });
+        if (articles.length === 0 && userOrTopicExists === true) res.status(200).send({ articles });
+        else {
+          next(userOrTopicExists.notFoundMsg);
+        }
+      })
+      .catch((err) => {
+        next(err);
+      });
+  }
 };
 
 
@@ -154,7 +126,6 @@ exports.sendAddedComment = (req, res, next) => {
 
   addComment(authoredBody)
     .then((addedComment) => {
-      console.log(addedComment);
       res.status(201).send({ addedComment });
     })
     .catch((err) => {

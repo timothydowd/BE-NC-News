@@ -191,7 +191,6 @@ describe('/api', () => {
       return request.patch('/api/articles/1').send(input)
         .expect(202)
         .then((res) => {
-          console.log(res.body);
           expect(res.body.updatedArticle[0].votes).to.equal(50);
         });
     });
@@ -210,7 +209,6 @@ describe('/api', () => {
       };
       return request.patch('/api/articles/5').send(input)
         .then((res) => {
-          console.log(res.body.msg);
           expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
         });
     });
@@ -377,7 +375,6 @@ describe('/api', () => {
         };
         return request.post('/api/articles/1/comments').send(input).expect(400)
           .then((res) => {
-            console.log(res.error);
             expect(res.body.msg).to.equal('400 - bad request');
           });
       });
@@ -549,7 +546,6 @@ describe('/api', () => {
     describe('error handling', () => {
       it('GET 400 - username does not exist', () => request.get('/api/users/terrytibbs').expect(404)
         .then((res) => {
-          console.log(res.body);
           expect(res.body.msg).to.equal('404 - username does not exist');
         }));
 
@@ -562,7 +558,6 @@ describe('/api', () => {
         return request.post('/api/users/').send(input)
           .expect(400)
           .then((res) => {
-            console.log(res.error);
             expect(res.body.msg).to.equal('400 - bad request');
           });
       });

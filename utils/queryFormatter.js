@@ -1,19 +1,23 @@
-
-exports.formatQuery = (req) => {
+exports.formatQuery = (query) => {
   const conditions = {};
   let {
     sort_by,
     order,
-  } = req.query;
+    author,
+    topic,
+  } = query;
 
-  if (sort_by !== 'comment_count' && sort_by !== undefined) sort_by = `articles.${req.query.sort_by}`;
-  if (order !== 'asc' && order !== 'desc' && order !== undefined) next({ code: 'orderErr', detail: 'sort by order must be asc or desc.' });
+  if (author) username = { username: author };
+  if (topic) slug = { topic };
 
-  for (key in req.query) {
+  if (sort_by !== 'comment_count' && sort_by !== undefined) sort_by = `articles.${query.sort_by}`;
+  if (order !== 'asc' && order !== 'desc' && order !== undefined) order = 'invalidInput';
+
+  for (key in query) {
     if (key !== 'sort_by' && key !== 'order') {
-      conditions[`articles.${key}`] = req.query[key];
+      conditions[`articles.${key}`] = query[key]; // all this formats the res.query  so it can be accepted by get articles
     }
   }
 
-  return { conditions, sortBy, order };
+  return { sort_by, order, conditions };
 };

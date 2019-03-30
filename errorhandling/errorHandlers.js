@@ -42,11 +42,9 @@ exports.handle404 = (err, req, res, next) => {
   } else next(err);
 };
 
-/*
+
 exports.handle500 = (err, req, res, next) => {
-  //console.log(err.code);
   if (err.status === 500) {
-    res.status(500).send({ msg: '500 error' });
+    res.status(500).send({ msg: `500 - ${err.detail || 'internal server error'}` });
   } else next(err);
 };
-*/
