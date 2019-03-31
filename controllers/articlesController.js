@@ -12,7 +12,6 @@ exports.sendArticles = (req, res, next) => {
   else {
     return Promise.all([getArticles(sort_by, order, conditions), checkUserOrTopicExists(req)])
       .then(([articles, userOrTopicExists]) => {
-      // if(articles.length === 0) next({ code: 'notFound', detail: 'record not found' })
         if (articles.length !== 0) res.status(200).send({ articles });
         if (articles.length === 0 && userOrTopicExists === true) res.status(200).send({ articles });
         else {
@@ -33,9 +32,12 @@ exports.sendArticlesByArticleId = (req, res, next) => { // if a query but not a 
 
 
   getArticles(sortBy, order, conditions)
-    .then((article) => {
-      if (article.length === 0) next({ code: 'articleIdNotFound', detail: 'article_id does not exist' });
-      else res.status(200).send({ article });
+    .then((singleArticle) => {
+      if (singleArticle.length === 0) next({ code: 'articleIdNotFound', detail: 'article_id does not exist' });
+      else {
+        const [arrayDestructuredArticle] = singleArticle;
+        res.status(200).send({ article: arrayDestructuredArticle });
+      }
     })
     .catch((err) => {
       next(err);
@@ -52,8 +54,9 @@ exports.sendAddedArticle = (req, res, next) => {
   };
 
   addArticle(authoredBody)
-    .then((addedArticle) => {
-      res.status(201).send({ addedArticle });
+    .then((singleArticle) => {
+      const [arrayDestructuredArticle] = singleArticle;
+      res.status(201).send({ addedArticle: arrayDestructuredArticle });
     })
     .catch((err) => {
       next(err);
@@ -69,8 +72,9 @@ exports.sendVoteUpdatedArticle = (req, res, next) => {
     next({ code: 'incVoteInvalid', detail: 'Number of votes not specified / invalid entry type / invalid entry field' });
   } else {
     updateVotes(articleId, newVote)
-      .then((updatedArticle) => {
-        res.status(202).send({ updatedArticle });
+      .then((singleUpdatedArticle) => {
+        const [arrayDestructuredArticle] = singleUpdatedArticle;
+        res.status(202).send({ updatedArticle: arrayDestructuredArticle });
       })
       .catch((err) => {
         next(err);
@@ -128,8 +132,9 @@ exports.sendAddedComment = (req, res, next) => {
   delete authoredBody.username;
 
   addComment(authoredBody)
-    .then((addedComment) => {
-      res.status(201).send({ addedComment });
+    .then((singleAddedComment) => {
+      const [arrayDestructuredComment] = singleAddedComment;
+      res.status(201).send({ addedComment: arrayDestructuredComment });
     })
     .catch((err) => {
       next(err);

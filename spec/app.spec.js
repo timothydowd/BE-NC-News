@@ -172,14 +172,14 @@ describe('/api', () => {
       return request.post('/api/articles/').send(input)
         .expect(201)
         .then((res) => {
-          expect(res.body.addedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body', 'created_at');
+          expect(res.body.addedArticle).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body', 'created_at');
         });
     });
 
     it('22-GET articles by article_id - status 200 - content objects must contain correct keys including a comment count', () => request.get('/api/articles/5').expect(200)
       .then((res) => {
-        expect(res.body.article[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
-        expect(res.body.article[0].article_id).to.equal(5);
+        expect(res.body.article).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+        expect(res.body.article.article_id).to.equal(5);
       }));
 
 
@@ -191,7 +191,7 @@ describe('/api', () => {
       return request.patch('/api/articles/1').send(input)
         .expect(202)
         .then((res) => {
-          expect(res.body.updatedArticle[0].votes).to.equal(50);
+          expect(res.body.updatedArticle.votes).to.equal(50);
         });
     });
     it('24-PATCH article by article_id - responds with the updated article with 50 minused votes', () => {
@@ -200,7 +200,7 @@ describe('/api', () => {
       };
       return request.patch('/api/articles/1').send(input)
         .then((res) => {
-          expect(res.body.updatedArticle[0].votes).to.equal(-50);
+          expect(res.body.updatedArticle.votes).to.equal(-50);
         });
     });
     it('25-PATCH article by article_id - status 202 - responds with the correct keys', () => {
@@ -209,7 +209,7 @@ describe('/api', () => {
       };
       return request.patch('/api/articles/5').send(input)
         .then((res) => {
-          expect(res.body.updatedArticle[0]).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
+          expect(res.body.updatedArticle).contains.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'body');
         });
     });
 
@@ -242,7 +242,7 @@ describe('/api', () => {
       return request.post('/api/articles/1/comments').send(input)
         .expect(201)
         .then((res) => {
-          expect(res.body.addedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'created_at', 'votes', 'body');
+          expect(res.body.addedComment).contains.keys('comment_id', 'author', 'article_id', 'created_at', 'votes', 'body');
         });
     });
 
