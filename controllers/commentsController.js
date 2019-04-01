@@ -13,8 +13,9 @@ exports.sendVoteUpdatedComment = (req, res, next) => {
   if (!newVote || !Number.isInteger(newVote) || Object.keys(req.body).length !== 1) next({ code: 'incVoteInvalid', detail: 'Number of votes not specified / invalid entry type / invalid entry field' });
   else {
     updateCommentVotes(commentId, newVote)
-      .then((updatedComment) => {
-        res.status(202).send({ updatedComment });
+      .then((singleUpdatedComment) => {
+        const [arrayDestructuredComment] = singleUpdatedComment;
+        res.status(202).send({ updatedComment: arrayDestructuredComment });
       })
       .catch((err) => {
         next(err);

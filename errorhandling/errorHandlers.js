@@ -48,3 +48,9 @@ exports.handle500 = (err, req, res, next) => {
     res.status(500).send({ msg: `500 - ${err.detail || 'internal server error'}` });
   } else next(err);
 };
+
+exports.handle405 = (err, req, res, next) => {
+  if (err.status === 405) {
+    res.status(405).send({ msg: `500 - ${err.detail || 'method not allowed'}` });
+  } else next(err);
+};

@@ -54,10 +54,10 @@ describe('/api', () => {
       };
 
       const output = {
-        addedTopic: [{
+        addedTopic: {
           slug: 'somethingPrettyUnique',
           description: 'Cyril was a naughy man',
-        }],
+        },
       };
 
       return request.post('/api/topics/').send(input)
@@ -89,6 +89,12 @@ describe('/api', () => {
             expect(res.body.msg).to.eql('422 - Key (slug)=(mitch) already exists.');
           });
       });
+      xit('7a-PATCH topic - status 405 - invalid http method', () => request.patch('/api/topics/')
+        .expect(405)
+        .then((res) => {
+          console.log(res.error);
+          expect(res.body.msg).to.eql('405 - invalid http method');
+        }));
     });
   });
 
@@ -422,7 +428,7 @@ describe('/api', () => {
       return request.patch('/api/comments/2').send(input)
         .expect(202)
         .then((res) => {
-          expect(res.body.updatedComment[0].votes).to.equal(15);
+          expect(res.body.updatedComment.votes).to.equal(15);
         });
     });
     it('38-PATCH comment by comment_id - responds with the updated article with 50 minused votes', () => {
@@ -431,7 +437,7 @@ describe('/api', () => {
       };
       return request.patch('/api/comments/4').send(input)
         .then((res) => {
-          expect(res.body.updatedComment[0].votes).to.equal(-150);
+          expect(res.body.updatedComment.votes).to.equal(-150);
         });
     });
     it('39-PATCH comment by comment_id - status 202 - responds with the correct keys', () => {
@@ -440,7 +446,7 @@ describe('/api', () => {
       };
       return request.patch('/api/comments/4').send(input)
         .then((res) => {
-          expect(res.body.updatedComment[0]).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
+          expect(res.body.updatedComment).contains.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
         });
     });
 
@@ -510,13 +516,13 @@ describe('/api', () => {
     it('43-GET users by username - content objects must contain the keys username, name and avatar_url', () => request.get('/api/users/icellusedkars').expect(200)
       .then((res) => {
         const output = {
-          user: [{
+          user: {
             username: 'icellusedkars',
             name: 'sam',
             avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4',
-          }],
+          },
         };
-        expect(res.body.user[0]).contains.keys('username', 'name', 'avatar_url');
+        expect(res.body.user).contains.keys('username', 'name', 'avatar_url');
         expect(res.body).to.eql(output);
       }));
 
@@ -528,17 +534,17 @@ describe('/api', () => {
       };
 
       const output = {
-        addedUser: [{
+        addedUser: {
           username: 'cyrilsneer',
           name: 'cyril',
           avatar_url: 'img',
-        }],
+        },
       };
 
       return request.post('/api/users/').send(input)
         .expect(201)
         .then((res) => {
-          expect(res.body.addedUser[0]).contains.keys('username', 'avatar_url', 'name');
+          expect(res.body.addedUser).contains.keys('username', 'avatar_url', 'name');
           expect(res.body).to.eql(output);
         });
     });
