@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const {
   handle404, handle422, handle400, unrecognizedRoute, handle500, handle405,
 } = require('./errorhandling/errorHandlers');
-
+const cors = require('cors');
 
 app.use(bodyParser.json());
+app.use(cors());
 app.use('/api', apiRouter);
 
 app.use('/*', unrecognizedRoute);
@@ -15,6 +16,6 @@ app.use(handle422);
 app.use(handle404);
 app.use(handle500);
 app.all(handle405);
-// app.use(handle500);
+
 
 module.exports = { app };
