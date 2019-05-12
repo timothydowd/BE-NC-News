@@ -6,14 +6,14 @@ const convertTime = array => array.map((row) => {
 
   if (row.title) {
     newObj = {
-      title, topic, author, body,
+      title, topic, author, body, created_at: new Date(created_at),
     };
-    newObj.created_at = new Date(created_at);
+    // newObj.created_at = new Date(created_at);
   } else {
     newObj = {
-      body, belongs_to, created_by, votes,
+      body, belongs_to, created_by, votes, created_at: new Date(created_at),
     };
-    newObj.created_at = new Date(created_at);
+    // newObj.created_at = new Date(created_at);
   }
 
   return newObj;

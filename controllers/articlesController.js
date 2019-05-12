@@ -131,6 +131,7 @@ exports.sendAddedComment = (req, res, next) => {
   authoredBody.author = authoredBody.username;
   delete authoredBody.username;
 
+
   addComment(authoredBody)
     .then((singleAddedComment) => {
       const [arrayDestructuredComment] = singleAddedComment;
