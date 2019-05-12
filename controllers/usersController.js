@@ -4,6 +4,9 @@ exports.sendUsers = (req, res, next) => {
   getUsers()
     .then((users) => {
       res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -29,5 +32,8 @@ exports.sendUserByUserName = (req, res, next) => {
         const [arrayDestructuredUser] = singleUser;
         res.status(200).send({ user: arrayDestructuredUser });
       }
+    })
+    .catch((err) => {
+      next(err);
     });
 };
