@@ -1,14 +1,8 @@
 process.env.NODE_ENV = 'test';
 
-const {
-  expect,
-} = require('chai');
-const {
-  app,
-} = require('../app');
-const {
-  connection,
-} = require('../db/connection');
+const { expect } = require('chai');
+const { app } = require('../app');
+const { connection } = require('../db/connection');
 const request = require('supertest')(app);
 
 describe('/api', () => {
@@ -265,7 +259,7 @@ describe('/api', () => {
           name: 'cyril',
         };
         return request.post('/api/users').send(input).expect(201)
-          .then(res => request.get('/api/articles?author=cyrilsneer').expect(200)
+          .then(() => request.get('/api/articles?author=cyrilsneer').expect(200)
             .then((res) => {
               expect(res.body).to.eql({
                 articles: [],

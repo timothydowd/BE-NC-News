@@ -1,5 +1,5 @@
-const { convertTime } = require('../utils/timeConverter');
 const { expect } = require('chai');
+const { convertTime } = require('../utils/timeConverter');
 
 
 describe('convertTime', () => {

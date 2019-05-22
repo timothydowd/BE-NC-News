@@ -1,7 +1,5 @@
+const { expect } = require('chai');
 const createRef = require('../utils/createRef');
-const {
-  expect,
-} = require('chai');
 
 
 describe('createRef', () => {

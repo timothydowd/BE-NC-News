@@ -1,5 +1,5 @@
-const { formatComments } = require('../utils/dataFormatters');
 const { expect } = require('chai');
+const { formatComments } = require('../utils/dataFormatters');
 
 
 describe('formatComments', () => {
