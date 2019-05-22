@@ -89,12 +89,6 @@ describe('/api', () => {
             expect(res.body.msg).to.eql('422 - Key (slug)=(mitch) already exists.');
           });
       });
-      xit('7a-PATCH topic - status 405 - invalid http method', () => request.patch('/api/topics/')
-        .expect(405)
-        .then((res) => {
-          console.log(res.error);
-          expect(res.body.msg).to.eql('405 - invalid http method');
-        }));
     });
   });
 
@@ -161,11 +155,6 @@ describe('/api', () => {
       .then((res) => {
         expect(res.body.articles[0].comment_count).to.equal('13');
         expect(res.body.articles[res.body.articles.length - 1].comment_count).to.equal('0');
-      }));
-    xit('20-GET articles - handles queries of joined columns (comment_count=0)', () => request.get('/api/articles/?comment_count=13')
-      .then((res) => {
-        expect(res.body.articles[0].comment_count).to.equal('13');
-        expect(res.body.articles.length).to.equal(1);
       }));
 
     it('21-POST article - status 201 - responds with the posted object', () => {
